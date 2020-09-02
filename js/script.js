@@ -29,11 +29,11 @@ $(document).ready(function(){
                         var context = risposta.results[i];
                         var html = template(context);
                         $('#lista').append(html);                           // compilo la pagina con i valori dei risultati
-                    } else {
-                        console.log('Non è stato trovato nessun risultato')
-                    }
-                }
-                // if(!$('#lista'))
+                    };
+                };
+                if($('#lista:empty')){
+                    $('#risultati').html('Non è stato trovato nessun risultato');
+                };
             },
             error: function(){
                 alert('Si è verificato un errore');
@@ -46,5 +46,4 @@ $(document).ready(function(){
 
 // DA FARE
 // - permettere nuove ricerche dopo la prima
-// - se non c'è nessun risultato dire 'Non è stato trovato nessun risultato'
 // - cercare non solo al click, ma anche con keyUp su invio
