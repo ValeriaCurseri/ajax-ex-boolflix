@@ -12,9 +12,6 @@ $(document).ready(function(){
 
 })
 
-// DA FARE
-// - mostrare 'Non è stato trovato nessun risultato'
-
 // -- funzioni -- //
 
 function attivaRicerca(){                                               // fz per la ricerca
@@ -32,17 +29,17 @@ function attivaRicerca(){                                               // fz pe
         },
         success: function(risposta){
             for (var i = 0; i < risposta.results.length; i++){          // ciclo tutti i risultati dell'array results
-                // var ultimoIndice = parseInt(risposta.results.length) - 1;        NON FUNZIONA
                 if(risposta.results[i].title.includes(query) || risposta.results[i].original_title.includes(query)){    // se il titolo o il titolo originale includono la ricerca
                     var source = $("#entry-template").html();
                     var template = Handlebars.compile(source);
                     var context = risposta.results[i];
                     var html = template(context);
                     $('#lista').append(html);                           // compilo la pagina con i valori dei risultati
-                } // else if ((i == ultimoIndice) && $('#lista:empty')) { // se #lista rimane vuoto dopo il ciclo
-                //     $('#risultati').html('Non è stato trovato nessun risultato');        NON FUNZIONA
-                // };
+                }
             };
+            if (risposta.total_results == 0){
+                $('#risultati').text('Non è stato trovato alcun risultato')
+            }
             query = $('#query').val('');
         },
         error: function(){
