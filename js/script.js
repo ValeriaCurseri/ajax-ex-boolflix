@@ -13,7 +13,6 @@ $(document).ready(function(){
 })
 
 // DA FARE
-// - permettere nuove ricerche dopo la prima
 // - mostrare 'Non è stato trovato nessun risultato'
 
 // -- funzioni -- //
@@ -21,7 +20,7 @@ $(document).ready(function(){
 function attivaRicerca(){                                               // fz per la ricerca
     var query = $('#query').val().toLowerCase();                        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
 
-    // $('#lista').empty();
+    $('#lista').empty();                                                // svuoto #lista dai risultati dell'ultima ricerca, così è possibile farne una seconda
 
     $.ajax({                                                            // attivo la chiamata API
         url:'https://api.themoviedb.org/3/search/movie',
@@ -44,7 +43,7 @@ function attivaRicerca(){                                               // fz pe
                 //     $('#risultati').html('Non è stato trovato nessun risultato');        NON FUNZIONA
                 // };
             };
-            // query = $('#query').val('');
+            query = $('#query').val('');
         },
         error: function(){
             alert('Si è verificato un errore');
