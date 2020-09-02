@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Boolflix</title>
+        <!-- fontawesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+        <!-- foglio di stile -->
+        <link rel="stylesheet" href="css/style.css">
+        <!-- handlebars -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js" integrity="sha512-zT3zHcFYbQwjHdKjCu6OMmETx8fJA9S7E6W7kBeFxultf75OPTYUJigEKX58qgyQMi1m1EgenfjMXlRZG8BXaw==" crossorigin="anonymous"></script>
+        <!-- jquery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <input type="text" id="query">
+        <button id="cerca">Cerca</button>
+        <ul id="lista">
+
+        </ul>
+        <!-- template handlebars -->
+        <script id="entry-template" type="text/x-handlebars-template">
+            <li>
+                <h3 class="titolo">{{title}}</h3>
+                <h4 class="titolo originale">{{original_title}}</h4>
+                <span class="lingua">{{original_language}}</span>
+                <span class="voto">{{vote_average}}</span>
+            </li>
+        </script>
+        <!-- javascript -->
+        <script src="js/script.js" charset="utf-8"></script>
+    </body>
+</html>
