@@ -4,7 +4,8 @@ $(document).ready(function(){
         if(event.keyCode == 13 || event.which == 13){       // al click del tasto invio
             var query = $('#query').val().toLowerCase();        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
             $('#lista').empty();                                // svuoto il div risultati
-            var cerca = attivaRicerca(query);                   // attivo la fz per la ricerca
+            var cercaFilm = ricercaFilm(query);                 // attivo la fz per la ricerca dei film
+            var cercaSerie = ricercaSerie(query);               // attivo la fz per la ricerca delle serie tv
             $('#query').val('');                                // pulisco il campo di input
         }
     })
@@ -12,20 +13,16 @@ $(document).ready(function(){
     $('#cerca').click(function(){                           // al click sul bottone
         var query = $('#query').val().toLowerCase();            // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
         $('#lista').empty();                                    // svuoto il div risultati
-        var cerca = attivaRicerca(query);                       // attivo la fz per la ricerca
+        var cercaFilm = ricercaFilm(query);                     // attivo la fz per la ricerca dei film
+        var cercaSerie = ricercaSerie(query);                   // attivo la fz per la ricerca delle serie tv
         $('#query').val('');                                    // pulisco il campo di input
     })
 
 })
 
-// RICERCA SERIE TV
-// Allarghiamo poi la ricerca anche alle serie tv. Con la stessa azione di ricerca dovremo prendere sia i film che corrispondono alla query, sia le serie tv, stando attenti ad avere alla fine dei valori simili (le serie e i film hanno campi nel JSON di risposta diversi, simili ma non sempre identici)
-// Qui un esempio di chiamata per le serie tv:
-// https:api.themoviedb.org/3/search/tv?api_key=e99307154c6dfb0b4750f6603256716d&language=it_IT&query=scrubs
-
 // -- funzioni -- //
 
-function attivaRicerca(data){
+function ricercaFilm(data){
     $.ajax({                                                            // attivo la chiamata API
         url:'https://api.themoviedb.org/3/search/movie',
         method:'GET',
@@ -36,7 +33,7 @@ function attivaRicerca(data){
         },
         success: function(risposta){
             if (risposta.total_results == 0){                                   // SE il numero di risultati è 0
-                $('#risultati').text('Non è stato trovato alcun risultato');    // mostro il messaggio
+                $('#risultati').text('Non è stato trovato alcun risultato per i film');    // mostro il messaggio
             } else {                                                            // ALTRIMENTI
                 for (var i = 0; i < risposta.results.length; i++){              // ciclo tutti i risultati dell'array results
                     var titoli = risposta.results[i].title;
@@ -50,6 +47,45 @@ function attivaRicerca(data){
                             original_language: simboloLingua(linguaOriginale),
                             original_title: titoliOriginali,
                             title: titoli,
+                            vote_average: stelline(voto)                        // dal voto genero le stelline
+                        }
+                        var html = template(context);
+                        $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
+                    }
+                };
+            };
+        },
+        error: function(){
+            alert('Si è verificato un errore');
+        }
+    })
+}
+
+function ricercaSerie(data){
+    $.ajax({                                                            // attivo la chiamata API
+        url:'https:api.themoviedb.org/3/search/tv',
+        method:'GET',
+        data:{                                                          // aggiungo le chiavi
+            api_key:'e99307154c6dfb0b4750f6603256716d',
+            language:'it-IT',
+            query: data
+        },
+        success: function(risposta){
+            if (risposta.total_results == 0){                                   // SE il numero di risultati è 0
+                $('#risultati').text('Non è stato trovato alcun risultato per le serie tv');    // mostro il messaggio
+            } else {                                                            // ALTRIMENTI
+                for (var i = 0; i < risposta.results.length; i++){              // ciclo tutti i risultati dell'array results
+                    var titoli = risposta.results[i].name;
+                    var titoliOriginali = risposta.results[i].original_name;
+                    var voto = risposta.results[i].vote_average;
+                    var linguaOriginale = risposta.results[i].original_language
+                    if(titoli.includes(data) || titoliOriginali.includes(data)){// se il titolo o il titolo originale includono la ricerca
+                        var source = $("#entry-template").html();
+                        var template = Handlebars.compile(source);
+                        var context = {                                         // specifico context per riuscire a gestire meglio i risultati
+                            original_language: simboloLingua(linguaOriginale),
+                            original_name: titoliOriginali,
+                            name: titoli,
                             vote_average: stelline(voto)                        // dal voto genero le stelline
                         }
                         var html = template(context);
