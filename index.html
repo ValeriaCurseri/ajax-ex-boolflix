@@ -14,7 +14,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     </head>
     <body>
-        <input type="text" id="query">
+        <input type="text" id="query" placeholder="Cerca un film">
         <button id="cerca">Cerca</button>
         <div id="risultati">
             <ul id="lista">
@@ -25,10 +25,10 @@
         <!-- template handlebars -->
         <script id="entry-template" type="text/x-handlebars-template">
             <li>
-                <h3 class="titolo">{{title}}</h3>
-                <h4 class="titolo originale">{{original_title}}</h4>
-                <span class="lingua">{{original_language}}</span>
-                <span class="voto">{{vote_average}}</span>
+                <h3 class="titolo">Titolo: {{title}}</h3>
+                <h4 class="titolo originale">Titolo originale: {{original_title}}</h4>
+                <span class="lingua">Lingua: {{original_language}}</span>
+                <span class="voto">Voto: {{vote_average}}</span>
             </li>
         </script>
         <!-- javascript -->
