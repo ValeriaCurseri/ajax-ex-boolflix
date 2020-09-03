@@ -36,7 +36,7 @@ function ricerca(data,type){
             query: data
         },
         success: function(risposta){
-            stampaRisultati(risposta,type);
+            stampa(risposta,type);
         },
         error: function(){
             alert('Si è verificato un errore');
@@ -44,32 +44,32 @@ function ricerca(data,type){
     })
 }
 
-function stampaRisultati(data,type){
-    if (data.total_results == 0){                                   // SE il numero di risultati è 0
+function stampa(data,type){
+    if (data.total_results == 0){                                       // SE il numero di risultati è 0
         $('#risultati').text('Non è stato trovato alcun risultato');    // mostro il messaggio
     } else {                                                            // ALTRIMENTI
         var source = $("#entry-template").html();
         var template = Handlebars.compile(source);
-        for (var i = 0; i < data.results.length; i++){              // ciclo tutti i risultati dell'array results
+        for (var i = 0; i < data.results.length; i++){                  // ciclo tutti i risultati dell'array results
             var voto = data.results[i].vote_average;
             var linguaOriginale = data.results[i].original_language
-            if (type == 'movie') {
+            if (type == 'movie') {                                      // SE il type corrisponde a movie
                 var titoloOriginale = data.results[i].original_title;
                 var titolo = data.results[i].title;
                 var context = {                                         // specifico context per riuscire a gestire meglio i risultati
                     original_title: titoloOriginale,
                     title: titolo,
-                    tipo:type,
+                    tipo: 'Film',
                     original_language: simboloLingua(linguaOriginale),
                     vote_average: stelline(voto)                        // dal voto genero le stelline
                 }
-            } else {
+            } else {                                                    // ALTRIMENTI: se corrisponde a tv
                 var titoloOriginale = data.results[i].original_name;
                 var titolo = data.results[i].name;
                 var context = {                                         // specifico context per riuscire a gestire meglio i risultati
                     original_name: titoloOriginale,
                     name: titolo,
-                    tipo:type,
+                    tipo: 'Serie TV',
                     original_language: simboloLingua(linguaOriginale),
                     vote_average: stelline(voto)                        // dal voto genero le stelline
                 }
