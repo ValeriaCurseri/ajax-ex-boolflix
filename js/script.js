@@ -18,11 +18,6 @@ $(document).ready(function(){
 
 })
 
-
-
-// LINGUA IN BANDIERA
-// Trasformiamo poi la stringa statica della lingua in una vera e propria bandiera della nazione corrispondente, gestendo il caso in cui non abbiamo la bandiera della nazione ritornata dall’API (le flag non ci sono in FontAwesome).
-
 // RICERCA SERIE TV
 // Allarghiamo poi la ricerca anche alle serie tv. Con la stessa azione di ricerca dovremo prendere sia i film che corrispondono alla query, sia le serie tv, stando attenti ad avere alla fine dei valori simili (le serie e i film hanno campi nel JSON di risposta diversi, simili ma non sempre identici)
 // Qui un esempio di chiamata per le serie tv:
@@ -47,11 +42,12 @@ function attivaRicerca(data){
                     var titoli = risposta.results[i].title;
                     var titoliOriginali = risposta.results[i].original_title;
                     var voto = risposta.results[i].vote_average;
+                    var linguaOriginale = risposta.results[i].original_language
                     if(titoli.includes(data) || titoliOriginali.includes(data)){// se il titolo o il titolo originale includono la ricerca
                         var source = $("#entry-template").html();
                         var template = Handlebars.compile(source);
                         var context = {                                         // specifico context per riuscire a gestire meglio i risultati
-                            original_language: risposta.results[i].original_language,
+                            original_language: simboloLingua(linguaOriginale),
                             original_title: titoliOriginali,
                             title: titoli,
                             vote_average: stelline(voto)                        // dal voto genero le stelline
@@ -81,3 +77,13 @@ function stelline(num){
     };
     return stella;                                      // 9- ritorno la variabile stella
 };
+
+function simboloLingua(lingua){
+    var risultato = '';                                     // 1- imposto stringa vuota per inserire poi il tag delle immagini
+    if (lingua == 'it' || lingua == 'en'){                  // 2- SE la proprietà è it è en
+        risultato = '<img src="img/' + lingua + '.svg"/>';  // 3- inserisco il tag img con la variabile uguale alla proprietà
+    } else {                                                // 4- ALTRIMENTI: SE la proprietà è diversa da it e en
+        risultato = lingua;                                 // 5- ritorno solo la proprietà, come al solito
+    }
+    return risultato;
+}

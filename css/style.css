@@ -7,3 +7,7 @@
 span.lingua, span.voto{
     display:block;
 }
+
+.lingua img{
+    width:20px;
+}
