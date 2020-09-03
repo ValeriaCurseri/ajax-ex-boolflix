@@ -3,28 +3,22 @@ $(document).ready(function(){
     $('#query').keyup(function(event){
         if(event.keyCode == 13 || event.which == 13){       // al click del tasto invio
             var query = $('#query').val().toLowerCase();        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
-            var svuotoRisultati = svuotoRisultati();            // svuoto il div risultati
+            $('#lista').empty();                                // svuoto il div risultati
             var cerca = attivaRicerca(query);                   // attivo la fz per la ricerca
-            var puliscoInput = puliscoInput();                  // pulisco il campo di input
+            $('#query').val('');                                // pulisco il campo di input
         }
     })
 
     $('#cerca').click(function(){                           // al click sul bottone
         var query = $('#query').val().toLowerCase();            // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
-        var svuotoRisultati = svuotoRisultati();                // svuoto il div risultati
+        $('#lista').empty();                                    // svuoto il div risultati
         var cerca = attivaRicerca(query);                       // attivo la fz per la ricerca
-        var puliscoInput = puliscoInput();                      // pulisco il campo di input
+        $('#query').val('');                                    // pulisco il campo di input
     })
 
 })
 
-// VOTO IN STELLINE
-// Trasformiamo il voto da 1 a 10 decimale in un numero intero da 1 a 5, così da permetterci di stampare a schermo un numero di stelle piene che vanno da 1 a 5, lasciando le restanti vuote (troviamo le icone in FontAwesome).
-// Arrotondiamo sempre per eccesso all’unità successiva, non gestiamo icone mezze piene (o mezze vuote :P)
-// 1- divido il voto per due
-// 2- arrotondo per eccesso con fz math >> ottengo num e cerco 5 - num
-// 3- ciclo for per generare tante stelle quante num
-// 4- ciclo for per generare tante stelle vuote quante 5 - num 
+
 
 // LINGUA IN BANDIERA
 // Trasformiamo poi la stringa statica della lingua in una vera e propria bandiera della nazione corrispondente, gestendo il caso in cui non abbiamo la bandiera della nazione ritornata dall’API (le flag non ci sono in FontAwesome).
@@ -35,10 +29,6 @@ $(document).ready(function(){
 // https:api.themoviedb.org/3/search/tv?api_key=e99307154c6dfb0b4750f6603256716d&language=it_IT&query=scrubs
 
 // -- funzioni -- //
-
-function svuotoRisultati(){
-    $('#lista').empty();
-}
 
 function attivaRicerca(data){
     $.ajax({                                                            // attivo la chiamata API
@@ -56,10 +46,16 @@ function attivaRicerca(data){
                 for (var i = 0; i < risposta.results.length; i++){              // ciclo tutti i risultati dell'array results
                     var titoli = risposta.results[i].title;
                     var titoliOriginali = risposta.results[i].original_title;
+                    var voto = risposta.results[i].vote_average;
                     if(titoli.includes(data) || titoliOriginali.includes(data)){// se il titolo o il titolo originale includono la ricerca
                         var source = $("#entry-template").html();
                         var template = Handlebars.compile(source);
-                        var context = risposta.results[i];
+                        var context = {                                         // specifico context per riuscire a gestire meglio i risultati
+                            original_language: risposta.results[i].original_language,
+                            original_title: titoliOriginali,
+                            title: titoli,
+                            vote_average: stelline(voto)                        // dal voto genero le stelline
+                        }
                         var html = template(context);
                         $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
                     }
@@ -72,6 +68,16 @@ function attivaRicerca(data){
     })
 }
 
-function puliscoInput(){
-    $('#query').val('');
-}
+function stelline(num){
+    var votoDiviso = num / 2;                           // 1- divido il voto per due
+    var votoArrotondato = Math.ceil(votoDiviso);        // 2- arrotondo per eccesso con fz math >> ottengo num e cerco 5 - num
+    var stella = '';                                    // 3- imposto stringa vuota per inserire poi le stelle di fontawesome
+    for (var i = 1; i < 6; i++){                        // 4- ciclo for per generare stelle (i da 1 a 5 per confrontarlo con votoArrotondato)
+        if (i <= votoArrotondato) {                     // 5- SE i <= votoArrotondato genero stelle intere
+            stella += '<i class="fas fa-star"></i>';    // 6- aggiungo nella stringa vuota il codice fontawesome per stella piena
+        } else {                                        // 7- ALTRIMENTI: SE i > votoArrotondato genero stelle vuote
+            stella += '<i class="far fa-star"></i>';    // 8- aggiungo nella stringa vuota il codice fontawesome per stella vuota
+        };
+    };
+    return stella;                                      // 9- ritorno la variabile stella
+};
