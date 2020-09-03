@@ -36,45 +36,48 @@ function ricerca(data,type){
             query: data
         },
         success: function(risposta){
-            // stampaRisultati(data,type);
-            if (risposta.total_results == 0){                                   // SE il numero di risultati è 0
-                $('#risultati').text('Non è stato trovato alcun risultato');    // mostro il messaggio
-            } else {                                                            // ALTRIMENTI
-                var source = $("#entry-template").html();
-                var template = Handlebars.compile(source);
-                for (var i = 0; i < risposta.results.length; i++){              // ciclo tutti i risultati dell'array results
-                    var voto = risposta.results[i].vote_average;
-                    var linguaOriginale = risposta.results[i].original_language
-                    if (type == 'film') {
-                        var titoloOriginale = risposta.results[i].original_title;
-                        var titolo = risposta.results[i].title;
-                        var context = {                                         // specifico context per riuscire a gestire meglio i risultati
-                            original_title: titoloOriginale,
-                            title: titolo,
-                            tipo:type,
-                            original_language: simboloLingua(linguaOriginale),
-                            vote_average: stelline(voto)                        // dal voto genero le stelline
-                        }
-                    } else {
-                        var titoloOriginale = risposta.results[i].original_name;
-                        var titolo = risposta.results[i].name;
-                        var context = {                                         // specifico context per riuscire a gestire meglio i risultati
-                            original_name: titoloOriginale,
-                            name: titolo,
-                            tipo:type,
-                            original_language: simboloLingua(linguaOriginale),
-                            vote_average: stelline(voto)                        // dal voto genero le stelline
-                        }
-                    }
-                    var html = template(context);
-                    $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
-                };
-            };
+            stampaRisultati(risposta,type);
         },
         error: function(){
             alert('Si è verificato un errore');
         }
     })
+}
+
+function stampaRisultati(data,type){
+    if (data.total_results == 0){                                   // SE il numero di risultati è 0
+        $('#risultati').text('Non è stato trovato alcun risultato');    // mostro il messaggio
+    } else {                                                            // ALTRIMENTI
+        var source = $("#entry-template").html();
+        var template = Handlebars.compile(source);
+        for (var i = 0; i < data.results.length; i++){              // ciclo tutti i risultati dell'array results
+            var voto = data.results[i].vote_average;
+            var linguaOriginale = data.results[i].original_language
+            if (type == 'movie') {
+                var titoloOriginale = data.results[i].original_title;
+                var titolo = data.results[i].title;
+                var context = {                                         // specifico context per riuscire a gestire meglio i risultati
+                    original_title: titoloOriginale,
+                    title: titolo,
+                    tipo:type,
+                    original_language: simboloLingua(linguaOriginale),
+                    vote_average: stelline(voto)                        // dal voto genero le stelline
+                }
+            } else {
+                var titoloOriginale = data.results[i].original_name;
+                var titolo = data.results[i].name;
+                var context = {                                         // specifico context per riuscire a gestire meglio i risultati
+                    original_name: titoloOriginale,
+                    name: titolo,
+                    tipo:type,
+                    original_language: simboloLingua(linguaOriginale),
+                    vote_average: stelline(voto)                        // dal voto genero le stelline
+                }
+            }
+            var html = template(context);
+            $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
+        };
+    };
 }
 
 function stelline(num){
