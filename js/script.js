@@ -4,8 +4,10 @@ $(document).ready(function(){
         if(event.keyCode == 13 || event.which == 13){       // al click del tasto invio
             var query = $('#query').val().toLowerCase();        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
             $('#lista').empty();                                // svuoto il div risultati
-            var cercaFilm = ricercaFilm(query);                 // attivo la fz per la ricerca dei film
-            var cercaSerie = ricercaSerie(query);               // attivo la fz per la ricerca delle serie tv
+            // var cercaFilm = ricercaFilm(query);                 // attivo la fz per la ricerca dei film
+            // var cercaSerie = ricercaSerie(query);               // attivo la fz per la ricerca delle serie tv
+            var cercaFilm = ricerca(query,'movie');
+            var cercaSerie = ricerca(query,'tv');
             $('#query').val('');                                // pulisco il campo di input
         }
     })
@@ -13,8 +15,10 @@ $(document).ready(function(){
     $('#cerca').click(function(){                           // al click sul bottone
         var query = $('#query').val().toLowerCase();            // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
         $('#lista').empty();                                    // svuoto il div risultati
-        var cercaFilm = ricercaFilm(query);                     // attivo la fz per la ricerca dei film
-        var cercaSerie = ricercaSerie(query);                   // attivo la fz per la ricerca delle serie tv
+        // var cercaFilm = ricercaFilm(query);                 // attivo la fz per la ricerca dei film
+        // var cercaSerie = ricercaSerie(query);               // attivo la fz per la ricerca delle serie tv
+        var cercaFilm = ricerca(query,'movie');
+        var cercaSerie = ricerca(query,'tv');
         $('#query').val('');                                    // pulisco il campo di input
     })
 
@@ -22,9 +26,9 @@ $(document).ready(function(){
 
 // -- funzioni -- //
 
-function ricercaFilm(data){
+function ricerca(data,type){
     $.ajax({                                                            // attivo la chiamata API
-        url:'https://api.themoviedb.org/3/search/movie',
+        url:'https://api.themoviedb.org/3/search/' + type,
         method:'GET',
         data:{                                                          // aggiungo le chiavi
             api_key:'6cdc8707c60410cd9aef476067301b80',
@@ -32,126 +36,45 @@ function ricercaFilm(data){
             query: data
         },
         success: function(risposta){
-            stampaRisultati(data,'film');
-        },
-        error: function(){
-            alert('Si è verificato un errore');
-        }
-    })
-}
-
-function ricercaSerie(data){
-    $.ajax({                                                            // attivo la chiamata API
-        url:'https:api.themoviedb.org/3/search/tv',
-        method:'GET',
-        data:{                                                          // aggiungo le chiavi
-            api_key:'e99307154c6dfb0b4750f6603256716d',
-            language:'it-IT',
-            query: data
-        },
-        success: function(risposta){
-            stampaRisultati(data,'serie');
-        },
-        error: function(){
-            alert('Si è verificato un errore');
-        }
-    })
-}
-
-function stampaRisultati(data,type){
-    if (risposta.total_results == 0){                                   // SE il numero di risultati è 0
-        $('#risultati').text('Non è stato trovato alcun risultato');    // mostro il messaggio
-    } else {                                                            // ALTRIMENTI
-        for (var i = 0; i < risposta.results.length; i++){              // ciclo tutti i risultati dell'array results
-            var voto = risposta.results[i].vote_average;
-            var linguaOriginale = risposta.results[i].original_language
-            if (type == 'film') {
-                var titoloOriginale = risposta.results[i].original_title;
-                var titolo = risposta.results[i].title;
-                // if(titolo.includes(data) || titoloOriginale.includes(data)){// se il titolo o il titolo originale includono la ricerca
-                    var source = $("#entry-template").html();
-                    var template = Handlebars.compile(source);
-                    var context = {                                         // specifico context per riuscire a gestire meglio i risultati
-                        original_title: titoloOriginale,
-                        title: titolo,
-                        tipo:type,
-                        original_language: simboloLingua(linguaOriginale),
-                        vote_average: stelline(voto)                        // dal voto genero le stelline
-                    }
-                    var html = template(context);
-                    $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
-                // }
-            } else {
-                var titoloOriginale = risposta.results[i].original_name;
-                var titolo = risposta.results[i].name;
-                if(titolo.includes(data) || titoloOriginale.includes(data)){// se il titolo o il titolo originale includono la ricerca
-                    var source = $("#entry-template").html();
-                    var template = Handlebars.compile(source);
-                    var context = {                                         // specifico context per riuscire a gestire meglio i risultati
-                        original_name: titoloOriginale,
-                        name: titolo,
-                        tipo:type,
-                        original_language: simboloLingua(linguaOriginale),
-                        vote_average: stelline(voto)                        // dal voto genero le stelline
-                    }
-                    var html = template(context);
-                    $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
-                }
-            };
-
-            // TROPPI IF
-            // if (type == 'film') {
-            //     var titoloOriginale = risposta.results[i].original_title;
-            //     var titolo = risposta.results[i].title;
-            // } else {
-            //     var titoloOriginale = risposta.results[i].original_name;
-            //     var titolo = risposta.results[i].name;
-            // };
-            // var voto = risposta.results[i].vote_average;
-            // var linguaOriginale = risposta.results[i].original_language
-            // if(titolo.includes(data) || titoloOriginale.includes(data)){// se il titolo o il titolo originale includono la ricerca
-            //     var source = $("#entry-template").html();
-            //     var template = Handlebars.compile(source);
-            //     var context = {                                         // specifico context per riuscire a gestire meglio i risultati
-            //         if (type == 'film') {
-            //             original_title: titoloOriginale,
-            //             title: titolo,
-            //         } else {
-            //             original_name: titoloOriginale,
-            //             name: titolo,
-            //         };
-            //         tipo:type,
-            //         original_language: simboloLingua(linguaOriginale),
-            //         vote_average: stelline(voto)                        // dal voto genero le stelline
-            //     }
-            //     var html = template(context);
-            //     $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
-            // }
-        };
-    };
-    ///
-    if (risposta.total_results == 0){                                   // SE il numero di risultati è 0
-        $('#risultati').text('Non è stato trovato alcun risultato per le serie tv');    // mostro il messaggio
-    } else {                                                            // ALTRIMENTI
-        for (var i = 0; i < risposta.results.length; i++){              // ciclo tutti i risultati dell'array results
-            var titoli = risposta.results[i].name;
-            var titoliOriginali = risposta.results[i].original_name;
-            var voto = risposta.results[i].vote_average;
-            var linguaOriginale = risposta.results[i].original_language
-            if(titoli.includes(data) || titoliOriginali.includes(data)){// se il titolo o il titolo originale includono la ricerca
+            // stampaRisultati(data,type);
+            if (risposta.total_results == 0){                                   // SE il numero di risultati è 0
+                $('#risultati').text('Non è stato trovato alcun risultato');    // mostro il messaggio
+            } else {                                                            // ALTRIMENTI
                 var source = $("#entry-template").html();
                 var template = Handlebars.compile(source);
-                var context = {                                         // specifico context per riuscire a gestire meglio i risultati
-                    original_language: simboloLingua(linguaOriginale),
-                    original_name: titoliOriginali,
-                    name: titoli,
-                    vote_average: stelline(voto)                        // dal voto genero le stelline
-                }
-                var html = template(context);
-                $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
-            }
-        };
-    };
+                for (var i = 0; i < risposta.results.length; i++){              // ciclo tutti i risultati dell'array results
+                    var voto = risposta.results[i].vote_average;
+                    var linguaOriginale = risposta.results[i].original_language
+                    if (type == 'film') {
+                        var titoloOriginale = risposta.results[i].original_title;
+                        var titolo = risposta.results[i].title;
+                        var context = {                                         // specifico context per riuscire a gestire meglio i risultati
+                            original_title: titoloOriginale,
+                            title: titolo,
+                            tipo:type,
+                            original_language: simboloLingua(linguaOriginale),
+                            vote_average: stelline(voto)                        // dal voto genero le stelline
+                        }
+                    } else {
+                        var titoloOriginale = risposta.results[i].original_name;
+                        var titolo = risposta.results[i].name;
+                        var context = {                                         // specifico context per riuscire a gestire meglio i risultati
+                            original_name: titoloOriginale,
+                            name: titolo,
+                            tipo:type,
+                            original_language: simboloLingua(linguaOriginale),
+                            vote_average: stelline(voto)                        // dal voto genero le stelline
+                        }
+                    }
+                    var html = template(context);
+                    $('#lista').append(html);                               // compilo la pagina con i valori dei risultati
+                };
+            };
+        },
+        error: function(){
+            alert('Si è verificato un errore');
+        }
+    })
 }
 
 function stelline(num){
