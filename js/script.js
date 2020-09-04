@@ -20,10 +20,12 @@ $(document).ready(function(){
     })
 })
 
-// DA FARE
-// - stampa in due div diversi con due messaggi diversi di errore
-
-// Milestone 3:In questa milestone come prima cosa aggiungiamo la copertina del film o della serie al nostro elenco. Ci viene passata dall’API solo la parte finale dell’URL, questo perché poi potremo generare da quella porzione di URL tante dimensioni diverse. Dovremo prendere quindi l’URL base delle immagini di TMDB: https://image.tmdb.org/t/p/ per poi aggiungere la dimensione che vogliamo generare (troviamo tutte le dimensioni possibili a questo link: https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400) per poi aggiungere la parte finale dell’URL passata dall’API.Esempio di URL che torna la copertina di BORIS:https://image.tmdb.org/t/p/w185/s2VDcsMh9ZhjFUxw77uCFDpTuXp.jpgMiles
+// AGGIUNGIAMO LA COPERTINA
+// Ci viene passata dall’API solo la parte finale dell’URL, questo perché poi potremo generare da quella porzione di URL tante dimensioni diverse.
+// 1 - Dovremo prendere quindi l’URL base delle immagini di TMDB: https://image.tmdb.org/t/p/
+// 2 - aggiungere la dimensione che vogliamo generare (troviamo tutte le dimensioni possibili a questo link: https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400)
+// 3 - aggiungere la parte finale dell’URL passata dall’API.
+// Esempio di URL che torna la copertina di BORIS:https://image.tmdb.org/t/p/w185/s2VDcsMh9ZhjFUxw77uCFDpTuXp.jpg
 
 // -- funzioni -- //
 
@@ -38,10 +40,10 @@ function ricerca(data,url,type){
                 query: data
             },
             success: function(risposta){
-                console.log('ok');
-                if (data.total_results != 0){           // SE il numero di risultati è diverso da 0
+                if (risposta.total_results != 0){           // SE il numero di risultati è diverso da 0
+                    console.log('risultati');
                     stampa(risposta,type);                  // stampo i risultati
-                } else if (data.total_results == 0){    // ALTRIMENTI: se il numero di risultati è 0
+                } else {                                // ALTRIMENTI: se il numero di risultati è 0
                     console.log('nessun risultato');
                     noResults(type);                        // mostro messaggio
                 }
@@ -73,7 +75,8 @@ function stampa(data,type){
             titolo: titolo,
             tipo: type,
             original_language: simboloLingua(linguaOriginale),
-            vote_average: stelline(voto)                        // dal voto genero le stelline
+            vote_average: stelline(voto),                        // dal voto genero le stelline
+            poster: data.results[i].poster_path
         }
         var html = template(context);
         if (type == 'Film') {                                  // SE il type corrisponde a Film
