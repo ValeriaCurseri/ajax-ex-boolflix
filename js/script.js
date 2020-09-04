@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
-    var url1 = 'https://api.theFilmdb.org/3/search/movie';
-    var url2 = 'https://api.theFilmdb.org/3/search/tv';
+    var url1 = 'https://api.themoviedb.org/3/search/movie';
+    var url2 = 'https://api.themoviedb.org/3/search/tv';
 
     $('#query').keyup(function(event){
         if(event.keyCode == 13 || event.which == 13){   // al click del tasto invio
@@ -23,15 +23,11 @@ $(document).ready(function(){
 // DA FARE
 // - stampa in due div diversi con due messaggi diversi di errore
 
-// NON FUNZIONA
-// - messaggio di non risultati
+// Milestone 3:In questa milestone come prima cosa aggiungiamo la copertina del film o della serie al nostro elenco. Ci viene passata dall’API solo la parte finale dell’URL, questo perché poi potremo generare da quella porzione di URL tante dimensioni diverse. Dovremo prendere quindi l’URL base delle immagini di TMDB: https://image.tmdb.org/t/p/ per poi aggiungere la dimensione che vogliamo generare (troviamo tutte le dimensioni possibili a questo link: https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400) per poi aggiungere la parte finale dell’URL passata dall’API.Esempio di URL che torna la copertina di BORIS:https://image.tmdb.org/t/p/w185/s2VDcsMh9ZhjFUxw77uCFDpTuXp.jpgMiles
 
 // -- funzioni -- //
 
 function ricerca(data,url,type){
-    console.log(data);
-    console.log(url);
-    console.log(type);
     $.ajax(
         {                                       // attivo la chiamata API con l'attributo type
             url: url,
@@ -43,10 +39,11 @@ function ricerca(data,url,type){
             },
             success: function(risposta){
                 console.log('ok');
-                if (data.total_results != 0){   // SE il numero di risultati è diverso da 0
-                    stampa(risposta,type);          // stampo i risultati
-                } else {                        // ALTRIMENTI: se il numero di risultati è 0
-                    noResults(type);                    // mostro messaggio
+                if (data.total_results != 0){           // SE il numero di risultati è diverso da 0
+                    stampa(risposta,type);                  // stampo i risultati
+                } else if (data.total_results == 0){    // ALTRIMENTI: se il numero di risultati è 0
+                    console.log('nessun risultato');
+                    noResults(type);                        // mostro messaggio
                 }
             },
             error: function(){
@@ -95,9 +92,9 @@ function noResults(type){
     }
     var html = template(context);
     if (type == 'Film') {                                  // SE il type corrisponde a Film
-        $('.risultati.movie .lista').append(html);                               // compilo la pagina con i valori dei risultati
+        $('.risultati.movie').append(html);                               // compilo la pagina con i valori dei risultati
     } else if (type == 'Serie TV') {                              // ALTRIMENTI: se corrisponde a Serie TV
-        $('.risultati.tv .lista').append(html);                               // compilo la pagina con i valori dei risultati
+        $('.risultati.tv').append(html);                               // compilo la pagina con i valori dei risultati
     }
     // return $('.risultati.' + type + ' .lista').text('Non è stato trovato alcun risultato');
     // return alert('Non è stato trovato alcun risultato tra ' + type);
