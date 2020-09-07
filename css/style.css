@@ -10,6 +10,10 @@ h1,h2,h3,h4,h5,h6,p,span{
     font-family: 'Roboto', sans-serif;
 }
 
+h1{
+    color:red;
+}
+
 /* struttura */
 
 body{
@@ -22,21 +26,45 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border:1px solid red;
     padding: 20px;
 }
 
 section{
-    border:1px solid red;
     padding: 20px;
-    overflow-x: scroll;
     overflow-y: hidden;
+    margin-bottom:50px;
+}
+
+/* scroll bar */
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height:5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: red;
 }
 
 .lista{
     display:flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin-top:50px;
 }
 
 .risultato{
@@ -61,7 +89,7 @@ section{
   opacity: 0.75;
 }
 
-span.lingua, span.voto{
+.risultato span{
     display:block;
 }
 

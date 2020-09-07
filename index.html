@@ -24,6 +24,8 @@
             </div>
         </header>
 
+        <section id="query"></section>
+
         <section class="risultati movie">
             <h2>Film</h2>
             <div class="lista">
@@ -37,17 +39,29 @@
             </div>
         </section>
 
+        <!-- template handlebars per la query -->
+        <script id="query-template" type="text/x-handlebars-template">
+            <span>Risultati per {{query}}</span>
+        </script>
+
         <!-- template handlebars per i risultati della ricerca -->
         <script id="entry-template" type="text/x-handlebars-template">
-            <div class='risultato'>
+            <div class='risultato {{id}}'>
                 <div class="overlay">
-                    <h3 class="titolo">Titolo: {{titolo}}</h3>
-                    <h4 class="titolo originale">Titolo originale: {{titoloOriginale}}</h4>
-                    <span class="lingua">Lingua: {{{original_language}}}</span>
-                    <span class="voto">Voto: {{{vote_average}}}</span>
+                    <h3 class="titolo">{{titolo}}</h3>
+                    <span class="titolo originale"><em>Titolo originale:</em> {{titoloOriginale}}</span>
+                    <span class="lingua"><em>Lingua:</em> {{{original_language}}}</span>
+                    <span class="voto"><em>Voto:</em> {{{vote_average}}}</span>
+                    <span class="overview"><em>Sinossi:</em> {{overview}}</span>
                 </div>
                 <img class='poster' src="{{poster}}" alt="poster di {{titolo}}"/>
             </div>
+        </script>
+
+        <!-- template dettagli -->
+        <script id="cast-generi-template" type="text/x-handlebars-template">
+            <span class="cast"><em>Cast:</em> {{cast}}</span>
+            <span class="generi"><em>Generi:</em> {{generi}}</span>
         </script>
 
         <!-- template handlebars per il messaggio no results -->

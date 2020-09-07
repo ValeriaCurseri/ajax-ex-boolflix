@@ -12,6 +12,13 @@ $(document).ready(function(){
 
 })
 
+// - stampa dei generi con fz stampaDettagli
+// - stampa del cast 
+// - messaggio per sinossi mancante tramite fz sinossi
+// - freccette per scorrere
+// - messaggio per mostrare la query tramite fx ricercaPer
+// - campo input che compare al click sull'icona cerca
+
 // ----- funzioni ----- //
 
 function inizio(){
@@ -21,9 +28,21 @@ function inizio(){
 
     var query = $('#query').val().toLowerCase();        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
     cleanResults();                                     // pulisco i risultati e l'input per fare una nuova ricerca
+    // risultatiPer(query);
     ricerca(query,url1,'Film');                         // attivo la fz per la ricerca dei film
     ricerca(query,url2,'Serie TV');                     // attivo la fz per la ricerca delle serie Serie TV
 }
+
+// function risultatiPer(ricerca){
+//     // console.log(ricerca);
+//     var source = $("#query-template").html();
+//     var template = Handlebars.compile(source);
+//     var context = {
+//         query:ricerca,
+//     }
+//     var html = template(context);
+//     $('#query').html(html);
+// }
 
 function ricerca(data,url,type){
     $.ajax(
@@ -55,12 +74,15 @@ function stampa(data,type){
     for (var i = 0; i < data.results.length; i++){          // ciclo tutti i risultati dell'array results
         var voto = data.results[i].vote_average;
         var linguaOriginale = data.results[i].original_language;
+        var id = data.results[i].id;
         if (type == 'Film') {                           // SE il type corrisponde a Film (le chiavi sono diverse)
             var titoloOriginale = data.results[i].original_title;
             var titolo = data.results[i].title;
+            var tipo = 'movie';
         } else if (type == 'Serie TV') {                // ALTRIMENTI: se corrisponde a Serie TV (le chiavi sono diverse)
             var titoloOriginale = data.results[i].original_name;
             var titolo = data.results[i].name;
+            var tipo = 'tv';
         };
         var context = {                                 // specifico context per riuscire a gestire meglio i risultati e inserire le variabili
             titoloOriginale: titoloOriginale,                   // corretto per film o serie
@@ -68,7 +90,9 @@ function stampa(data,type){
             tipo: type,                                         // corretto per film o serie
             original_language: simboloLingua(linguaOriginale),  // dalla lingua genero le bandierine
             vote_average: stelline(voto),                       // dal voto genero le stelline
-            poster: immagine(data.results[i].poster_path)
+            poster: immagine(data.results[i].poster_path),
+            overview:data.results[i].overview.substring(0,300) + '...', //sinossi(data.results[i].overview)
+            id: id
         }
         var html = template(context);
         if (type == 'Film') {                           // SE il type corrisponde a Film
@@ -76,8 +100,54 @@ function stampa(data,type){
         } else if (type == 'Serie TV') {                // ALTRIMENTI: se corrisponde a Serie TV
             $('.risultati.tv .lista').append(html);         // appendo i risultati dell'elemento corretto del DOM
         }
+        castGeneri(tipo,id);                          // fz per ottenere generi e cast
     };
 }
+
+function castGeneri(type,id){
+    $.ajax(
+        {
+            url: 'https://api.themoviedb.org/3/' + type + '/' + id,
+            method:'GET',
+            data:{
+                api_key:'6cdc8707c60410cd9aef476067301b80',
+                language:'it-IT'
+            },
+            append_to_response: 'credits',
+            success: function(risposta){
+                var generi = risposta.genres;
+                // var cast = risposta.credits.cast;
+                console.log(generi);
+                // console.log(cast);
+
+                stampaDettagli(generi)
+            },
+            error: function(){
+                alert('Si è verificato un errore');
+            }
+        }
+    )
+}
+
+// function stampaDettagli(arrayGeneri){
+//     var listaGeneri = '';
+//     for (var i = 0; i < arrayGeneri.length; i++){
+//         if (i < (arrayGeneri.length - 1)){
+//             listaGeneri += arrayGeneri[i].name + ', ';
+//         } else {
+//             listaGeneri += arrayGeneri[i].name;
+//         }
+//     }
+//     // console.log(listaGeneri);
+//     var source = $("#cast-generi-template").html();
+//     var template = Handlebars.compile(source);
+//     var context = {                                     // specifico context creando un nuovo oggetto
+//         // cast: 'Non ci sono risultati nella sezione: ' + type,
+//         generi: listaGeneri
+//     }
+//     var html = template(context);
+//     $('.risultato#' + id).append(html);
+// }
 
 function noResults(type){
     var source = $("#noresults-template").html();
@@ -135,3 +205,12 @@ function immagine(immagine){
     };
     return urlCompleta;
 }
+
+// function sinossi(testo){
+//     if (testo.isEmpty()){
+//         var mostra = 'Nessuna sinossi disponibile';
+//     } else {
+//         var mostra = testo;
+//     };
+//     return mostra;
+// }
