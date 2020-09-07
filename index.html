@@ -4,6 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Boolflix</title>
+        <!-- font -->
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
         <!-- fontawesome -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
         <!-- foglio di stile -->
@@ -14,31 +16,38 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     </head>
     <body>
-        <input type="text" id="query" placeholder="Cerca un film">
-        <button id="cerca">Cerca</button>
-        <div class="risultati movie">
+        <header>
+            <h1>BOOLFLIX</h1>
+            <div id="ricerca">
+                <input type="text" id="query" placeholder="Cerca un film">
+                <button id="cerca">Cerca</button>
+            </div>
+        </header>
+
+        <section class="risultati movie">
             <h2>Film</h2>
-            <ul class="lista">
+            <div class="lista">
 
-            </ul>
-        </div>
-        <div class="risultati tv">
+            </div>
+        </section>
+        <section class="risultati tv">
             <h2>Serie TV</h2>
-            <ul class="lista">
+            <div class="lista">
 
-            </ul>
-        </div>
+            </div>
+        </section>
 
         <!-- template handlebars per i risultati della ricerca -->
         <script id="entry-template" type="text/x-handlebars-template">
-            <li>
-                <img src="https://image.tmdb.org/t/p/w342{{poster}}" alt="poster di {{titolo}}"/>
-                <h3 class="titolo">Titolo: {{titolo}}</h3>
-                <h4 class="titolo originale">Titolo originale: {{titoloOriginale}}</h4>
-                <span class="lingua">Lingua: {{{original_language}}}</span>
-                <span class="voto">Voto: {{{vote_average}}}</span>
-                <span class="tipo">Tipo: {{tipo}}</span>
-            </li>
+            <div class='risultato'>
+                <div class="overlay">
+                    <h3 class="titolo">Titolo: {{titolo}}</h3>
+                    <h4 class="titolo originale">Titolo originale: {{titoloOriginale}}</h4>
+                    <span class="lingua">Lingua: {{{original_language}}}</span>
+                    <span class="voto">Voto: {{{vote_average}}}</span>
+                </div>
+                <img class='poster' src="{{poster}}" alt="poster di {{titolo}}"/>
+            </div>
         </script>
 
         <!-- template handlebars per il messaggio no results -->

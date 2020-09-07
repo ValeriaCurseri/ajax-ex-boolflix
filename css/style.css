@@ -4,6 +4,63 @@
     box-sizing: border-box;
 }
 
+/* tipografia */
+
+h1,h2,h3,h4,h5,h6,p,span{
+    font-family: 'Roboto', sans-serif;
+}
+
+/* struttura */
+
+body{
+    background-color: #000;
+    color:#fff;
+}
+
+header{
+    height:70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border:1px solid red;
+    padding: 20px;
+}
+
+section{
+    border:1px solid red;
+    padding: 20px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.lista{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.risultato{
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #000;
+    padding:20px;
+}
+
+.risultato:hover .overlay {
+  opacity: 0.75;
+}
+
 span.lingua, span.voto{
     display:block;
 }

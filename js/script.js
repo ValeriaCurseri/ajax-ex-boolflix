@@ -1,27 +1,29 @@
 $(document).ready(function(){
 
-    // memorizzo in due variabili i due url così da poterli usare come argomenti nella fz di ricerca
-    var url1 = 'https://api.themoviedb.org/3/search/movie';
-    var url2 = 'https://api.themoviedb.org/3/search/tv';
-
     $('#query').keyup(function(event){
         if(event.keyCode == 13 || event.which == 13){   // al click del tasto invio
-            var query = $('#query').val().toLowerCase();    // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
-            cleanResults();                                 // pulisco i risultati e l'input per fare una nuova ricerca
-            ricerca(query,url1,'Film');                     // attivo la fz per la ricerca dei film
-            ricerca(query,url2,'Serie TV');                 // attivo la fz per la ricerca delle serie Serie TV
+            inizio();
         }
     })
 
     $('#cerca').click(function(){                       // al click sul bottone
-        var query = $('#query').val().toLowerCase();        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
-        cleanResults();                                     // pulisco i risultati e l'input per fare una nuova ricerca
-        ricerca(query,url1,'Film');                         // attivo la fz per la ricerca dei film
-        ricerca(query,url2,'Serie TV');                     // attivo la fz per la ricerca delle serie Serie TV
+        inizio();
     })
+
 })
 
 // ----- funzioni ----- //
+
+function inizio(){
+    // memorizzo in due variabili i due url così da poterli usare come argomenti nella fz di ricerca
+    var url1 = 'https://api.themoviedb.org/3/search/movie';
+    var url2 = 'https://api.themoviedb.org/3/search/tv';
+
+    var query = $('#query').val().toLowerCase();        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
+    cleanResults();                                     // pulisco i risultati e l'input per fare una nuova ricerca
+    ricerca(query,url1,'Film');                         // attivo la fz per la ricerca dei film
+    ricerca(query,url2,'Serie TV');                     // attivo la fz per la ricerca delle serie Serie TV
+}
 
 function ricerca(data,url,type){
     $.ajax(
@@ -66,7 +68,7 @@ function stampa(data,type){
             tipo: type,                                         // corretto per film o serie
             original_language: simboloLingua(linguaOriginale),  // dalla lingua genero le bandierine
             vote_average: stelline(voto),                       // dal voto genero le stelline
-            poster: data.results[i].poster_path
+            poster: immagine(data.results[i].poster_path)
         }
         var html = template(context);
         if (type == 'Film') {                           // SE il type corrisponde a Film
@@ -122,4 +124,14 @@ function simboloLingua(lingua){
     } else {                                            // 3- ALTRIMENTI: SE la proprietà è diversa da it e en
         return lingua;                                  // 4- ritorno solo la proprietà, come al solito
     }
+}
+
+function immagine(immagine){
+    if (immagine == null){
+        var urlCompleta = 'https://via.placeholder.com/342x513.png?text=Immagine+non+disponibile'
+    } else {
+        var urlDiBase = 'https://image.tmdb.org/t/p/w342';
+        var urlCompleta = urlDiBase + immagine;
+    };
+    return urlCompleta;
 }
