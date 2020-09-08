@@ -136,13 +136,11 @@ function stampa(data,type){
         }
         var html = template(context);
         if (type == 'Film' || type == 'movie') {        // SE il type corrisponde a Film
-                console.log(type);
             $('.risultati.movie .lista').append(html);      // appendo i risultati dell'elemento corretto del DOM
         } else if (type == 'Serie TV' || type == 'tv') {  // ALTRIMENTI: se corrisponde a Serie TV
-                console.log(type);
             $('.risultati.tv .lista').append(html);         // appendo i risultati dell'elemento corretto del DOM
         }
-        castGeneri(type,id);                            // fz per ottenere generi e cast (altra fz perchè devo fare altre chiamate ajax)
+        castGeneri(tipo,id);                            // fz per ottenere generi e cast (altra fz perchè devo fare altre chiamate ajax)
     };
 }
 
