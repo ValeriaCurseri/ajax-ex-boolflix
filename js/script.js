@@ -17,7 +17,6 @@ $(document).ready(function(){
 
 })
 
-// - stampa del cast
 // - freccette per scorrere
 // - mostrare subito tutti i film
 
@@ -116,16 +115,15 @@ function castGeneri(type,id){
             method:'GET',
             data:{
                 api_key:'6cdc8707c60410cd9aef476067301b80',
+                append_to_response: 'credits',
                 language:'it-IT'
             },
-            append_to_response: 'credits',
             success: function(risposta){
                 var generi = risposta.genres;
-                // var cast = risposta.credits.cast;
-                // console.log(generi);
-                // console.log(cast);
+                var cast = risposta.credits.cast;
+                console.log(cast);
 
-                stampaDettagli(generi,id);
+                stampaDettagli(generi,cast,id);
             },
             error: function(){
                 alert('Si è verificato un errore');
@@ -134,7 +132,8 @@ function castGeneri(type,id){
     )
 }
 
-function stampaDettagli(arrayGeneri,codeId){
+function stampaDettagli(arrayGeneri,arrayCast,codeId){
+
     var listaGeneri = '';
     for (var i = 0; i < arrayGeneri.length; i++){
         if (i < (arrayGeneri.length - 1)){
@@ -143,13 +142,25 @@ function stampaDettagli(arrayGeneri,codeId){
             listaGeneri += arrayGeneri[i].name;
         }
     }
-    console.log(listaGeneri);
-    console.log(codeId);
+
+    var listaCast = '';
+    var j = 0;
+    while (j < 5 && j < arrayCast.length){
+        if (j < 4){
+            listaCast += arrayCast[j].name + ', ';
+        } else {
+            listaCast += arrayCast[j].name;
+        }
+        j++;
+    }
+    console.log(listaCast);
+
     var source = $("#cast-generi-template").html();
     var template = Handlebars.compile(source);
     var context = {                                     // specifico context creando un nuovo oggetto
         // cast: 'Non ci sono risultati nella sezione: ' + type,
-        generi: listaGeneri
+        generi: listaGeneri,
+        cast: listaCast
     }
     var html = template(context);
     $('.risultato#' + codeId + ' .overlay').append(html);
@@ -183,9 +194,9 @@ function stelline(num){
     for (var i = 0; i < 5; i++){                        // 3- ciclo for per generare stelle (i da 0 a 5 per confrontarlo con votoArrotondato)
         if (i < votoArrotondato) {                          // 5- SE i < votoArrotondato genero stelle intere
             stella += '<i class="fas fa-star"></i>';            // 6- aggiungo nella stringa vuota il codice fontawesome per stella piena
-        } else if (resto != 0){                         // 11- se il resto è diverso da 0 vuol dire che è decimale
-            stella += '<i class="fas fa-star-half-alt"></i>';// 12- aggiungo una mezza stella
-            resto = 0;                                      // 13- porto il resto a 0
+        } else if (resto != 0){                             // 11- SE il resto è diverso da 0 vuol dire che è decimale
+            stella += '<i class="fas fa-star-half-alt"></i>';   // 12- aggiungo una mezza stella
+            resto = 0;                                          // 13- porto il resto a 0
         } else {                                            // 7- ALTRIMENTI: SE i > votoArrotondato genero stelle vuote
             stella += '<i class="far fa-star"></i>';            // 8- aggiungo nella stringa vuota il codice fontawesome per stella vuota
         };
