@@ -13,7 +13,7 @@ $(document).ready(function(){
 })
 
 // - stampa dei generi con fz stampaDettagli
-// - stampa del cast 
+// - stampa del cast
 // - messaggio per sinossi mancante tramite fz sinossi
 // - freccette per scorrere
 // - messaggio per mostrare la query tramite fx ricercaPer
@@ -91,7 +91,7 @@ function stampa(data,type){
             original_language: simboloLingua(linguaOriginale),  // dalla lingua genero le bandierine
             vote_average: stelline(voto),                       // dal voto genero le stelline
             poster: immagine(data.results[i].poster_path),
-            overview:data.results[i].overview.substring(0,300) + '...', //sinossi(data.results[i].overview)
+            overview:sinossi(data.results[i].overview),
             id: id
         }
         var html = template(context);
@@ -206,11 +206,11 @@ function immagine(immagine){
     return urlCompleta;
 }
 
-// function sinossi(testo){
-//     if (testo.isEmpty()){
-//         var mostra = 'Nessuna sinossi disponibile';
-//     } else {
-//         var mostra = testo;
-//     };
-//     return mostra;
-// }
+function sinossi(testo){
+    if (testo==""){                                     //if (testo.isEmpty()){             NON FUNZIONA
+        var mostra = 'Nessuna sinossi disponibile';
+    } else {
+        var mostra = testo.substring(0,300) + '...';
+    };
+    return mostra;
+}
