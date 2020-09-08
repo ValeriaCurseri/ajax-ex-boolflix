@@ -20,13 +20,20 @@ $(document).ready(function(){
     // scorrere con freccette
 
     $('i.right').click(function(){
-        var listaDaScrollare = $(".lista");
-        sideScroll(listaDaScrollare,'right',25,100,10);
+        if ($(this).hasClass('movie')){
+            $(".lista.movie").scrollLeft += $(".lista.movie").scrollLeft(350);
+        } else if ($(this).hasClass('tv')){
+            $(".lista.tv").scrollLeft += $(".lista.tv").scrollLeft(350);
+        }
     });
 
     $('i.left').click(function(){
-        var listaDaScrollare = $(".lista");
-        sideScroll(listaDaScrollare,'left',25,100,10);
+        if ($(this).hasClass('movie')){
+            $(".lista.movie").scrollLeft += $(".lista.movie").scrollLeft(-350);
+        } else if ($(this).hasClass('tv')){
+            $(".lista.tv").scrollLeft += $(".lista.tv").scrollLeft(-350);
+        }
+
     });
 
 })
@@ -246,21 +253,4 @@ function sinossi(testo){
         var mostra = testo.substring(0,300) + '...';
     };
     return mostra;
-}
-
-// scorrere con freccette
-
-function sideScroll(element,direction,speed,distance,step){
-    scrollAmount = 0;
-    var slideTimer = setInterval(function(){
-        if(direction == 'left'){
-            element.scrollLeft -= step;
-        } else {
-            element.scrollLeft += step;
-        }
-        scrollAmount += step;
-        if(scrollAmount >= distance){
-            window.clearInterval(slideTimer);
-        }
-    }, speed);
 }
