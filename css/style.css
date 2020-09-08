@@ -29,6 +29,34 @@ header{
     padding: 20px;
 }
 
+#ricerca.active, #ricerca.active:focus{
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+}
+
+input#query{
+    width:0px;
+    background: transparent;
+    border: none;
+    color:#fff;
+}
+
+input#query.active, input#query.active:focus{
+    margin-left: 5px;
+    width:200px;
+    outline: none;
+    color:#fff;
+}
+
+i#cerca{
+    font-size:20px;
+}
+
 section{
     padding: 20px;
     overflow-y: hidden;
@@ -62,7 +90,6 @@ section{
     display:flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    overflow-x: scroll;
     overflow-y: hidden;
     margin-top:50px;
 }

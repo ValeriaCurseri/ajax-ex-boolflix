@@ -6,18 +6,22 @@ $(document).ready(function(){
         }
     })
 
-    $('#cerca').click(function(){                       // al click sul bottone
-        inizio();
+
+    $('i#cerca').click(function(){                       // al click sull'iconcina di ricerca
+        if ($("#ricerca").hasClass("active") && $("input#query").addClass("active")){
+            inizio();
+        } else {
+            $("input#query").addClass("active");
+            $("#ricerca").addClass("active");
+        }
     })
 
 })
 
 // - stampa dei generi con fz stampaDettagli
 // - stampa del cast
-// - messaggio per sinossi mancante tramite fz sinossi
 // - freccette per scorrere
 // - messaggio per mostrare la query tramite fx ricercaPer
-// - campo input che compare al click sull'icona cerca
 
 // ----- funzioni ----- //
 
@@ -161,8 +165,7 @@ function noResults(type){
     } else if (type == 'Serie TV') {                    // ALTRIMENTI: se corrisponde a Serie TV
         $('.risultati.tv').append(html);                    // appendo i risultati dell'elemento corretto del DOM
     }
-    // return $('.risultati.' + type + ' .lista').text('Non è stato trovato alcun risultato');
-    // return alert('Non è stato trovato alcun risultato tra ' + type);
+
 }
 
 function cleanResults(){
