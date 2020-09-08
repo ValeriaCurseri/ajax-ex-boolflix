@@ -63,6 +63,11 @@ section{
     margin-bottom:50px;
 }
 
+section#mostra-query{
+    margin-bottom:0;
+    font-size: 20px;
+}
+
 /* scroll bar */
 
 /* width */

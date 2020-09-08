@@ -1,27 +1,28 @@
 $(document).ready(function(){
 
-    $('#query').keyup(function(event){
-        if(event.keyCode == 13 || event.which == 13){   // al click del tasto invio
-            inizio();
-        }
-    })
-
-
-    $('i#cerca').click(function(){                       // al click sull'iconcina di ricerca
-        if ($("#ricerca").hasClass("active") && $("input#query").addClass("active")){
-            inizio();
-        } else {
+    $('i#cerca').click(function(){                                                  // al click sull'iconcina di ricerca
+        if ($("#ricerca").hasClass("active") && $("input#query").addClass("active")){   // SE il div ricerca e l'input sono entrambi active
+            inizio();                                                                       // inizio la fz di ricerca
+        } else {                                                                        // ALTRIMENTI li rendo active e li mostro
             $("input#query").addClass("active");
             $("#ricerca").addClass("active");
         }
     })
 
+    $('#query').keyup(function(event){
+        if(event.keyCode == 13 || event.which == 13){                               // al click del tasto invio
+            inizio();                                                                       // inizio la fz di ricerca
+        }
+    })
+
 })
 
-// - stampa dei generi con fz stampaDettagli
 // - stampa del cast
 // - freccette per scorrere
-// - messaggio per mostrare la query tramite fx ricercaPer
+// - mostrare subito tutti i film
+
+// AIUTO
+// - transizione su comparsa dell'input
 
 // ----- funzioni ----- //
 
@@ -32,21 +33,21 @@ function inizio(){
 
     var query = $('#query').val().toLowerCase();        // memorizzo la query dell'utente e la trasformo in minuscolo così che sia possibile cercare in maiuscolo
     cleanResults();                                     // pulisco i risultati e l'input per fare una nuova ricerca
-    // risultatiPer(query);
+    risultatiPer(query);
     ricerca(query,url1,'Film');                         // attivo la fz per la ricerca dei film
     ricerca(query,url2,'Serie TV');                     // attivo la fz per la ricerca delle serie Serie TV
 }
 
-// function risultatiPer(ricerca){
-//     // console.log(ricerca);
-//     var source = $("#query-template").html();
-//     var template = Handlebars.compile(source);
-//     var context = {
-//         query:ricerca,
-//     }
-//     var html = template(context);
-//     $('#query').html(html);
-// }
+function risultatiPer(ricerca){
+    // console.log(ricerca);
+    var source = $("#query-template").html();
+    var template = Handlebars.compile(source);
+    var context = {
+        query:ricerca,
+    }
+    var html = template(context);
+    $('#mostra-query').append(html);
+}
 
 function ricerca(data,url,type){
     $.ajax(
@@ -121,10 +122,10 @@ function castGeneri(type,id){
             success: function(risposta){
                 var generi = risposta.genres;
                 // var cast = risposta.credits.cast;
-                console.log(generi);
+                // console.log(generi);
                 // console.log(cast);
 
-                stampaDettagli(generi)
+                stampaDettagli(generi,id);
             },
             error: function(){
                 alert('Si è verificato un errore');
@@ -133,25 +134,26 @@ function castGeneri(type,id){
     )
 }
 
-// function stampaDettagli(arrayGeneri){
-//     var listaGeneri = '';
-//     for (var i = 0; i < arrayGeneri.length; i++){
-//         if (i < (arrayGeneri.length - 1)){
-//             listaGeneri += arrayGeneri[i].name + ', ';
-//         } else {
-//             listaGeneri += arrayGeneri[i].name;
-//         }
-//     }
-//     // console.log(listaGeneri);
-//     var source = $("#cast-generi-template").html();
-//     var template = Handlebars.compile(source);
-//     var context = {                                     // specifico context creando un nuovo oggetto
-//         // cast: 'Non ci sono risultati nella sezione: ' + type,
-//         generi: listaGeneri
-//     }
-//     var html = template(context);
-//     $('.risultato#' + id).append(html);
-// }
+function stampaDettagli(arrayGeneri,codeId){
+    var listaGeneri = '';
+    for (var i = 0; i < arrayGeneri.length; i++){
+        if (i < (arrayGeneri.length - 1)){
+            listaGeneri += arrayGeneri[i].name + ', ';
+        } else {
+            listaGeneri += arrayGeneri[i].name;
+        }
+    }
+    console.log(listaGeneri);
+    console.log(codeId);
+    var source = $("#cast-generi-template").html();
+    var template = Handlebars.compile(source);
+    var context = {                                     // specifico context creando un nuovo oggetto
+        // cast: 'Non ci sono risultati nella sezione: ' + type,
+        generi: listaGeneri
+    }
+    var html = template(context);
+    $('.risultato#' + codeId + ' .overlay').append(html);
+}
 
 function noResults(type){
     var source = $("#noresults-template").html();
@@ -170,6 +172,7 @@ function noResults(type){
 
 function cleanResults(){
     $('.lista').empty();                                // svuoto il div risultati
+    $('#mostra-query').empty();                         // svuoto il div in cui mostro la query
     $('#query').val('');                                // pulisco il campo di input
 }
 

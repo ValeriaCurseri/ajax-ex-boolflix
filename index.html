@@ -24,7 +24,7 @@
             </div>
         </header>
 
-        <section id="query"></section>
+        <section id="mostra-query"></section>
 
         <section class="risultati movie">
             <h2>Film</h2>
@@ -41,7 +41,7 @@
 
         <!-- template handlebars per la query -->
         <script id="query-template" type="text/x-handlebars-template">
-            <span>Risultati per {{query}}</span>
+            <span>Risultati per "{{query}}"</span>
         </script>
 
         <!-- template handlebars per i risultati della ricerca -->
@@ -60,7 +60,7 @@
 
         <!-- template dettagli -->
         <script id="cast-generi-template" type="text/x-handlebars-template">
-            <span class="cast"><em>Cast:</em> {{cast}}</span>
+            <!-- <span class="cast"><em>Cast:</em> {{cast}}</span> -->
             <span class="generi"><em>Generi:</em> {{generi}}</span>
         </script>
 
