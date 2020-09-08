@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
-    // contenutiPiùVotati();       // prima della ricerca mostro i film più votati
+    contenutiTrending('movie');       // prima della ricerca mostro i film trending
+    contenutiTrending('tv');          // prima della ricerca mostro le serie trending
 
     $('i#cerca').click(function(){                                                  // al click sull'iconcina di ricerca
         if ($("#ricerca").hasClass("active") && $("input#query").addClass("active")){   // SE il div ricerca e l'input sono entrambi active
@@ -38,19 +39,28 @@ $(document).ready(function(){
 
 })
 
-// - mostrare subito i film più votati
 // - freccette per scorrere
 
 // ----- funzioni ----- //
 
-// function contenutiPiùVotati(){          // fz per mostrare i film più votati
-//     // memorizzo in due variabili i due url così da poterli usare come argomenti nella fz di ricerca
-//     var url1 = 'https://api.themoviedb.org/3/search/movie';
-//     var url2 = 'https://api.themoviedb.org/3/search/tv';
-//
-//     cercaPiuVotati(url1,'Film');                         // attivo la fz per la ricerca dei film
-//     cercaPiuVotati(url2,'Serie TV');                     // attivo la fz per la ricerca delle serie Serie TV
-// }
+function contenutiTrending(type){          // fz per mostrare i contenuti trending
+    $.ajax(
+        {
+            url: 'https://api.themoviedb.org/3/trending/' + type + '/day',   // uso la stessa fz per due chiamate
+            method:'GET',
+            data:{                                          // aggiungo le chiavi
+                api_key:'6cdc8707c60410cd9aef476067301b80',
+                language:'it-IT'
+            },
+            success: function(risposta){
+                stampa(risposta,type);                  // stampo i risultati
+            },
+            error: function(){
+                alert('Si è verificato un errore');
+            }
+        }
+    )
+}
 
 function inizio(){
     // memorizzo in due variabili i due url così da poterli usare come argomenti nella fz di ricerca
@@ -105,11 +115,11 @@ function stampa(data,type){
         var voto = data.results[i].vote_average;
         var linguaOriginale = data.results[i].original_language;
         var id = data.results[i].id;
-        if (type == 'Film') {                           // SE il type corrisponde a Film (le chiavi sono diverse)
+        if (type == 'Film' || type == 'movie') {        // SE il type corrisponde a Film (le chiavi sono diverse)
             var titoloOriginale = data.results[i].original_title;
             var titolo = data.results[i].title;
             var tipo = 'movie';
-        } else if (type == 'Serie TV') {                // ALTRIMENTI: se corrisponde a Serie TV (le chiavi sono diverse)
+        } else if (type == 'Serie TV' || type == 'tv') {  // ALTRIMENTI: se corrisponde a Serie TV (le chiavi sono diverse)
             var titoloOriginale = data.results[i].original_name;
             var titolo = data.results[i].name;
             var tipo = 'tv';
@@ -125,12 +135,14 @@ function stampa(data,type){
             id: id
         }
         var html = template(context);
-        if (type == 'Film') {                           // SE il type corrisponde a Film
+        if (type == 'Film' || type == 'movie') {        // SE il type corrisponde a Film
+                console.log(type);
             $('.risultati.movie .lista').append(html);      // appendo i risultati dell'elemento corretto del DOM
-        } else if (type == 'Serie TV') {                // ALTRIMENTI: se corrisponde a Serie TV
+        } else if (type == 'Serie TV' || type == 'tv') {  // ALTRIMENTI: se corrisponde a Serie TV
+                console.log(type);
             $('.risultati.tv .lista').append(html);         // appendo i risultati dell'elemento corretto del DOM
         }
-        castGeneri(tipo,id);                            // fz per ottenere generi e cast (altra fz perchè devo fare altre chiamate ajax)
+        castGeneri(type,id);                            // fz per ottenere generi e cast (altra fz perchè devo fare altre chiamate ajax)
     };
 }
 
