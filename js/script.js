@@ -19,15 +19,15 @@ $(document).ready(function(){
 
     // scorrere con freccette
 
-    // $('i.right').click(function(){
-    //     var listaDaScrollare = $(".risultato");
-    //     sideScroll(listaDaScrollare,'right',25,100,10);
-    // });
-    //
-    // $('i.left').click(function(){
-    //     var listaDaScrollare = $(".risultato");
-    //     sideScroll(listaDaScrollare,'left',25,100,10);
-    // });
+    $('i.right').click(function(){
+        var listaDaScrollare = $(".lista");
+        sideScroll(listaDaScrollare,'right',25,100,10);
+    });
+
+    $('i.left').click(function(){
+        var listaDaScrollare = $(".lista");
+        sideScroll(listaDaScrollare,'left',25,100,10);
+    });
 
 })
 
@@ -250,17 +250,17 @@ function sinossi(testo){
 
 // scorrere con freccette
 
-// function sideScroll(element,direction,speed,distance,step){
-//     scrollAmount = 0;
-//     var slideTimer = setInterval(function(){
-//         if(direction == 'left'){
-//             element.scrollLeft -= step;
-//         } else {
-//             element.scrollLeft += step;
-//         }
-//         scrollAmount += step;
-//         if(scrollAmount >= distance){
-//             window.clearInterval(slideTimer);
-//         }
-//     }, speed);
-// }
+function sideScroll(element,direction,speed,distance,step){
+    scrollAmount = 0;
+    var slideTimer = setInterval(function(){
+        if(direction == 'left'){
+            element.scrollLeft -= step;
+        } else {
+            element.scrollLeft += step;
+        }
+        scrollAmount += step;
+        if(scrollAmount >= distance){
+            window.clearInterval(slideTimer);
+        }
+    }, speed);
+}

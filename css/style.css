@@ -133,10 +133,19 @@ section#mostra-query{
   opacity: 0.75;
 }
 
+.overlay *{
+    margin-top:10px;
+}
+
 .risultato span{
     display:block;
 }
 
+span .fas, span .far{
+    margin-top:0;
+}
+
 .lingua img{
     width:20px;
+    margin-top:0;
 }
