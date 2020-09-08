@@ -108,6 +108,7 @@ section#mostra-query{
 
 .risultato{
     position: relative;
+    margin-right:5px;
 }
 
 .overlay {

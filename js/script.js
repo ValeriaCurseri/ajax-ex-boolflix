@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+    // contenutiPiùVotati();       // prima della ricerca mostro i film più votati
+
     $('i#cerca').click(function(){                                                  // al click sull'iconcina di ricerca
         if ($("#ricerca").hasClass("active") && $("input#query").addClass("active")){   // SE il div ricerca e l'input sono entrambi active
             inizio();                                                                       // inizio la fz di ricerca
@@ -15,15 +17,34 @@ $(document).ready(function(){
         }
     })
 
+    // scorrere con freccette
+
+    // $('i.right').click(function(){
+    //     var listaDaScrollare = $(".risultato");
+    //     sideScroll(listaDaScrollare,'right',25,100,10);
+    // });
+    //
+    // $('i.left').click(function(){
+    //     var listaDaScrollare = $(".risultato");
+    //     sideScroll(listaDaScrollare,'left',25,100,10);
+    // });
+
 })
 
-// - freccette per scorrere
-// - mostrare subito tutti i film
-
-// AIUTO
 // - transizione su comparsa dell'input
+// - mostrare subito i film più votati
+// - freccette per scorrere
 
 // ----- funzioni ----- //
+
+// function contenutiPiùVotati(){          // fz per mostrare i film più votati
+//     // memorizzo in due variabili i due url così da poterli usare come argomenti nella fz di ricerca
+//     var url1 = 'https://api.themoviedb.org/3/search/movie';
+//     var url2 = 'https://api.themoviedb.org/3/search/tv';
+//
+//     cercaPiuVotati(url1,'Film');                         // attivo la fz per la ricerca dei film
+//     cercaPiuVotati(url2,'Serie TV');                     // attivo la fz per la ricerca delle serie Serie TV
+// }
 
 function inizio(){
     // memorizzo in due variabili i due url così da poterli usare come argomenti nella fz di ricerca
@@ -38,7 +59,6 @@ function inizio(){
 }
 
 function risultatiPer(ricerca){
-    // console.log(ricerca);
     var source = $("#query-template").html();
     var template = Handlebars.compile(source);
     var context = {
@@ -104,26 +124,25 @@ function stampa(data,type){
         } else if (type == 'Serie TV') {                // ALTRIMENTI: se corrisponde a Serie TV
             $('.risultati.tv .lista').append(html);         // appendo i risultati dell'elemento corretto del DOM
         }
-        castGeneri(tipo,id);                          // fz per ottenere generi e cast
+        castGeneri(tipo,id);                            // fz per ottenere generi e cast (altra fz perchè devo fare altre chiamate ajax)
     };
 }
 
 function castGeneri(type,id){
     $.ajax(
         {
-            url: 'https://api.themoviedb.org/3/' + type + '/' + id,
+            url: 'https://api.themoviedb.org/3/' + type + '/' + id,     // chiamata per ogni tipo e ogni risultato
             method:'GET',
             data:{
                 api_key:'6cdc8707c60410cd9aef476067301b80',
-                append_to_response: 'credits',
+                append_to_response: 'credits',                          // per prendere il cast
                 language:'it-IT'
             },
             success: function(risposta){
-                var generi = risposta.genres;
-                var cast = risposta.credits.cast;
-                console.log(cast);
+                var generi = risposta.genres;                           // array dei generi
+                var cast = risposta.credits.cast;                       // array del cast
 
-                stampaDettagli(generi,cast,id);
+                stampaDettagli(generi,cast,id);                         // fz per stampare i due risultati con Handlebars
             },
             error: function(){
                 alert('Si è verificato un errore');
@@ -132,38 +151,36 @@ function castGeneri(type,id){
     )
 }
 
-function stampaDettagli(arrayGeneri,arrayCast,codeId){
+function stampaDettagli(arrayGeneri,arrayCast,codeId){      // fz per stampare cast e generi con handlebars
 
-    var listaGeneri = '';
-    for (var i = 0; i < arrayGeneri.length; i++){
-        if (i < (arrayGeneri.length - 1)){
-            listaGeneri += arrayGeneri[i].name + ', ';
-        } else {
-            listaGeneri += arrayGeneri[i].name;
+    var listaGeneri = '';                                       // imposto array vuoto per i generi
+    for (var i = 0; i < arrayGeneri.length; i++){               // ciclo tutti i generi di un risultato
+        if (i < (arrayGeneri.length - 1)){                      // SE non sono all'ultimo ciclo
+            listaGeneri += arrayGeneri[i].name + ', ';              // inserisco il genere nell'array con virgola
+        } else {                                                // ALTRIMENTI
+            listaGeneri += arrayGeneri[i].name;                     // inserisco il genere nell'array senza virgola
         }
     }
 
-    var listaCast = '';
+    var listaCast = '';                                         // imposto array vuoto per il cast (devo mostrare massimo 5 nomi)
     var j = 0;
-    while (j < 5 && j < arrayCast.length){
-        if (j < 4){
-            listaCast += arrayCast[j].name + ', ';
-        } else {
-            listaCast += arrayCast[j].name;
+    while (j < 5 && j < arrayCast.length){                      // creo un ciclo while per 5 volte, o fino a che ho ciclato tutto il cast (nel caso in cui sia composto da meno di 5 attori)
+        if (j < 4){                                             // SE non sono all'ultimo ciclo
+            listaCast += arrayCast[j].name + ', ';                  // inserisco il genere nell'array con virgola
+        } else {                                                // ALTRIMENTI
+            listaCast += arrayCast[j].name;                         // inserisco il genere nell'array senza virgola
         }
         j++;
     }
-    console.log(listaCast);
 
-    var source = $("#cast-generi-template").html();
-    var template = Handlebars.compile(source);
-    var context = {                                     // specifico context creando un nuovo oggetto
-        // cast: 'Non ci sono risultati nella sezione: ' + type,
+    var source = $("#cast-generi-template").html();             // seleziono il template
+    var template = Handlebars.compile(source);                  // lo collego a handlebars
+    var context = {                                             // specifico context creando un nuovo oggetto
         generi: listaGeneri,
         cast: listaCast
     }
     var html = template(context);
-    $('.risultato#' + codeId + ' .overlay').append(html);
+    $('.risultato#' + codeId + ' .overlay').append(html);       // lo appendo
 }
 
 function noResults(type){
@@ -231,3 +248,20 @@ function sinossi(testo){
     };
     return mostra;
 }
+
+// scorrere con freccette
+
+// function sideScroll(element,direction,speed,distance,step){
+//     scrollAmount = 0;
+//     var slideTimer = setInterval(function(){
+//         if(direction == 'left'){
+//             element.scrollLeft -= step;
+//         } else {
+//             element.scrollLeft += step;
+//         }
+//         scrollAmount += step;
+//         if(scrollAmount >= distance){
+//             window.clearInterval(slideTimer);
+//         }
+//     }, speed);
+// }
