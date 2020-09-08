@@ -31,7 +31,6 @@ $(document).ready(function(){
 
 })
 
-// - transizione su comparsa dell'input
 // - mostrare subito i film più votati
 // - freccette per scorrere
 
