@@ -18,25 +18,21 @@ $(document).ready(function(){
         }
     })
 
-    // scorrere con freccette
+    // scorrere le liste con le freccette
 
     $('i.right').click(function(){
-        if ($(this).hasClass('movie')){
-            $(".lista.movie").scrollLeft += $(".lista.movie").scrollLeft(350);
-        } else if ($(this).hasClass('tv')){
-            $(".lista.tv").scrollLeft += $(".lista.tv").scrollLeft(350);
-        }
+        var elemDaScrollare = $(this).siblings('.lista');
+        var currentPosition = elemDaScrollare.scrollLeft();
+        currentPosition += 350;
+        elemDaScrollare.scrollLeft(currentPosition);
     });
 
     $('i.left').click(function(){
-        if ($(this).hasClass('movie')){
-            $(".lista.movie").scrollLeft += $(".lista.movie").scrollLeft(-350);
-        } else if ($(this).hasClass('tv')){
-            $(".lista.tv").scrollLeft += $(".lista.tv").scrollLeft(-350);
-        }
-
+        var elemDaScrollare = $(this).siblings('.lista');
+        var currentPosition = elemDaScrollare.scrollLeft();
+        currentPosition -= 350;
+        elemDaScrollare.scrollLeft(currentPosition);
     });
-
 })
 
 // - freccette per scorrere
