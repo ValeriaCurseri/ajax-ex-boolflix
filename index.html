@@ -18,10 +18,22 @@
     <body>
         <header>
             <h1>BOOLFLIX</h1>
-            <div id="ricerca">
-                <i id="cerca" class="fas fa-search"></i>
-                <input type="text" id="query" placeholder="Cosa vuoi guardare?">
+
+            <div id="filtri">
+                <div id="ricerca">
+                    <i id="cerca" class="fas fa-search"></i>
+                    <input type="text" id="query" placeholder="Cosa vuoi guardare?">
+                </div>
+
+                <select id="generi">
+                    <option>Tutti i generi</option>
+                </select>
+
+                <div class="filtro-tipo"><span>Tutti</span></div>
+                <div class="filtro-tipo movie"><span>Film</span></div>
+                <div class="filtro-tipo tv"><span>Serie TV</span></div>
             </div>
+
         </header>
 
         <section id="mostra-query"></section>
@@ -79,6 +91,13 @@
         <!-- template handlebars per il messaggio no results -->
         <script id="noresults-template" type="text/x-handlebars-template">
             <span>{{risultato}}</span>
+        </script>
+
+        <!-- template handlebars della select dei generi -->
+        <script id="option-template" type="text/x-handlebars-template">
+            <option>
+                {{genere}}
+            </option>
         </script>
         <!-- javascript -->
         <script src="js/script.js" charset="utf-8"></script>

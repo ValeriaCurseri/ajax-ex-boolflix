@@ -1,5 +1,23 @@
 $(document).ready(function(){
 
+    // permetto di filtrare i risultati (film, serie, tutti)
+
+    $(".filtro-tipo").click(function(){
+        if ($(this).hasClass('movie')){
+            $('.risultati.movie').show();
+            $('.risultati.tv').hide();
+        } else if ($(this).hasClass('tv')){
+            $('.risultati.movie').hide();
+            $('.risultati.tv').show();
+        } else {
+            $('.risultati.movie').show();
+            $('.risultati.tv').show();
+        }
+    });
+
+    cercaGeneri('movie');
+    cercaGeneri('tv');
+
     contenutiTrending('movie');       // prima della ricerca mostro i film trending
     contenutiTrending('tv');          // prima della ricerca mostro le serie trending
 
@@ -33,11 +51,44 @@ $(document).ready(function(){
         currentPosition -= 350;
         elemDaScrollare.scrollLeft(currentPosition);
     });
+
+    // Creare una lista di generi richiedendo quelli disponibili all'API e creare dei filtri con i generi tv e movie per mostrare/nascondere le schede ottenute con la ricerca.
+
 })
 
-// - freccette per scorrere
-
 // ----- funzioni ----- //
+
+function cercaGeneri(type){         // fz per ottenere tutti i generi
+    $.ajax(
+        {
+            url:'https://api.themoviedb.org/3/genre/' + type + '/list',
+            method: 'GET',
+            data:{
+                api_key:'6cdc8707c60410cd9aef476067301b80',
+                language:'it-IT'
+            },
+            success: function(risposta){
+                // console.log('cercaGeneri funziona');
+                stampaGeneri(risposta,type);
+            },
+            error: function(){
+                alert('Si è verificato un errore');
+            }
+        }
+    )
+}
+
+function stampaGeneri(data,type){
+    var source = $("#option-template").html();
+    var template = Handlebars.compile(source);
+    for (var i = 0; i < data.genres.length; i++){          // ciclo tutti i risultati dell'array results
+        var context = {                                 // specifico context per riuscire a gestire meglio i risultati e inserire le variabili
+            genere: data.genres[i].name                   // corretto per film o serie
+        };
+        var html = template(context);
+        $('select#generi').append(html);      // appendo i risultati dell'elemento corretto del DOM
+    }
+}
 
 function contenutiTrending(type){          // fz per mostrare i contenuti trending
     $.ajax(
