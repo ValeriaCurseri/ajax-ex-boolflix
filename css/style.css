@@ -79,6 +79,12 @@ select#generi{
     text-align: center;
 }
 
+#spazio-ricerca{
+    width: 250px;
+    display: flex;
+    justify-content: flex-end;
+}
+
 /* trasizione in chiusura */
 #ricerca{
     transition: 1s;
