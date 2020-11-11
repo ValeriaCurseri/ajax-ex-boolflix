@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+    // DA FARE
+    // - al click su film o serie tv appare il filtro dei generi OK MA CON TRANSITION
+    // - se clicco sulla risposte suggerite mantengo le regole di stile date all'input
+    // - personalizzare barra scorrimento in select generi
+
     // permetto di filtrare i risultati (film, serie, tutti)
 
     $(".filtro-tipo").click(function(){
@@ -15,15 +20,54 @@ $(document).ready(function(){
         }
     });
 
-    cercaGeneri('movie');
-    cercaGeneri('tv');
-
     contenutiTrending('movie');       // prima della ricerca mostro i film trending
     contenutiTrending('tv');          // prima della ricerca mostro le serie trending
+    
+    $('#brand-name').click(function(){    // al click sul logo torni sulle tendenze
+        cleanResults();
+        contenutiTrending('movie');             // mostro i film trending
+        contenutiTrending('tv');                // mostro le serie trending
+    });
+
+    // al click sul logo torni sulle tendenze NON FA QUESTO
+    $(".filtro-tipo").click(function(){
+        $(".filtro-tipo").removeClass('selected');
+        if ($(this).hasClass('movie')){         // al click su btn film
+            $(this).addClass('selected');
+            $('.risultati.movie').show();           // mostra risultati film
+            $('.risultati.tv').hide();              // nasconde risultati serie            
+            $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
+            cercaGeneri('movie');                   // riempie la lista generi nel select filtra per genere con solo i generi dei film
+            $('#select-generi').removeClass('d-none');      
+            $('#select-generi').addClass('d-block');        
+            
+        } else if ($(this).hasClass('tv')){     // al click su btn serie tv
+            $(this).addClass('selected');
+            $('.risultati.movie').hide();           // mostra risultati serie tv
+            $('.risultati.tv').show();              // nasconde risultati film 
+            $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
+            cercaGeneri('tv');                      // riempie la lista generi nel select filtra per genere con solo i generi delle serie tv
+            $('#select-generi').removeClass('d-none');     
+            $('#select-generi').addClass('d-block');       
+        } else {
+            $('.risultati.movie').show();
+            $('.risultati.tv').show();
+            $('#select-generi').removeClass('d-block');     
+            $('#select-generi').addClass('d-none');  
+        }
+    });
+
+    // cerco all'invio o al click sulla icona di ricerca
 
     $('i#cerca').click(function(){                                                  // al click sull'iconcina di ricerca
-        if ($("#ricerca").hasClass("active") && $("input#query").addClass("active")){   // SE il div ricerca e l'input sono entrambi active
-            inizio();                                                                       // inizio la fz di ricerca
+        if ($("#ricerca").hasClass("active") && $("input#query").hasClass("active")){   // SE il div ricerca e l'input sono entrambi active
+            var campo = $("input#query").val();                                         // memorizzo il valore dell'input in una variabile
+            if (campo != ""){                                                               // SE il valore dell'input è diverso da stinga vuota
+                inizio();                                                                   // inizio la fz di ricerca
+            } else {                                                                        // ALTRIMENTI
+                $("#ricerca").removeClass("active");                                        // chiudo l'input
+                $("input#query").removeClass("active");
+            }
         } else {                                                                        // ALTRIMENTI li rendo active e li mostro
             $("input#query").addClass("active");
             $("#ricerca").addClass("active");
@@ -32,7 +76,10 @@ $(document).ready(function(){
 
     $('#query').keyup(function(event){
         if(event.keyCode == 13 || event.which == 13){                               // al click del tasto invio
-            inizio();                                                                       // inizio la fz di ricerca
+            var campo = $("input#query").val();                                     // memorizzo il valore dell'input in una variabile
+            if(campo != ""){                                                        // SE il valore dell'input è diverso da stinga vuota
+                inizio();                                                               // inizio la fz di ricerca
+            }
         }
     })
 
@@ -51,8 +98,6 @@ $(document).ready(function(){
         currentPosition -= 350;
         elemDaScrollare.scrollLeft(currentPosition);
     });
-
-    // Creare una lista di generi richiedendo quelli disponibili all'API e creare dei filtri con i generi tv e movie per mostrare/nascondere le schede ottenute con la ricerca.
 
 })
 

@@ -10,8 +10,9 @@ h1,h2,h3,h4,h5,h6,p,span{
     font-family: 'Roboto', sans-serif;
 }
 
-h1{
+#brand-name>h1{
     color:red;
+    cursor: pointer;
 }
 
 /* struttura */
@@ -33,6 +34,20 @@ header{
     left:0;
     z-index:2;
     background-color: #000;
+}
+
+select#generi{
+    width: 230px;
+    height: 40px;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    text-transform: uppercase;
+    background-color: #000;
+    color: #fff;
+    padding-left: 10px;
+    font-size: 16px;
 }
 
 #filtri{
@@ -64,6 +79,11 @@ header{
     text-align: center;
 }
 
+/* trasizione in chiusura */
+#ricerca{
+    transition: 1s;
+}
+
 #ricerca.active, #ricerca.active:focus{
     display: flex;
     align-items: center;
@@ -72,7 +92,7 @@ header{
     border-radius: 5px;
     color: #fff;
     padding: 10px;
-    -webkit-transition:1s;
+    transition:1s;
 }
 
 input#query{
@@ -88,8 +108,13 @@ input#query.active, input#query.active:focus{
     width:200px;
     outline: none;
     color:#fff;
-    -webkit-transition:1s;
+    transition:1s;
     font-family: 'Roboto', sans-serif;
+}
+
+/* trasizione in chiusura */
+input#query, input#query{
+    transition:1s;
 }
 
 i#cerca{
@@ -98,6 +123,11 @@ i#cerca{
 }
 
 i#cerca:hover, .filtro-tipo:hover{
+    color:red;
+    border-color:red;
+}
+
+.selected{
     color:red;
     border-color:red;
 }
