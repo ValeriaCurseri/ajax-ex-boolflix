@@ -30,7 +30,7 @@
                 <div class="filtro-tipo tv"><span>Serie TV</span></div>
                 <div id="select-generi" class="d-none">
                     <span>Filtra per genere:</span>
-                    <select id="generi">
+                    <select id="generi" name="generi">
                     </select>
                 </div>
             </div>
@@ -38,7 +38,7 @@
             <div id="spazio-ricerca">
                 <div id="ricerca">
                     <i id="cerca" class="fas fa-search"></i>
-                    <input type="text" id="query" placeholder="Cosa vuoi guardare?">
+                    <input autocomplete="off" type="text" id="query" placeholder="Cosa vuoi guardare?">
                 </div>
             </div>
         </header>
@@ -102,7 +102,7 @@
 
         <!-- template handlebars della select dei generi -->
         <script id="option-template" type="text/x-handlebars-template">
-            <option>
+            <option value="{{id}}" tipo="{{tipo}}">
                 {{genere}}
             </option>
         </script>

@@ -1,24 +1,11 @@
 $(document).ready(function(){
 
     // DA FARE
-    // - al click su film o serie tv appare il filtro dei generi OK MA CON TRANSITION
+    // - far funzionare il filtro per genere
+    // - al click su film o serie tv appare il filtro dei generi OK MA CON TRANSITION / SMOOTH
     // - se clicco sulla risposte suggerite mantengo le regole di stile date all'input
     // - personalizzare barra scorrimento in select generi
-
-    // permetto di filtrare i risultati (film, serie, tutti)
-
-    $(".filtro-tipo").click(function(){
-        if ($(this).hasClass('movie')){
-            $('.risultati.movie').show();
-            $('.risultati.tv').hide();
-        } else if ($(this).hasClass('tv')){
-            $('.risultati.movie').hide();
-            $('.risultati.tv').show();
-        } else {
-            $('.risultati.movie').show();
-            $('.risultati.tv').show();
-        }
-    });
+    
 
     contenutiTrending('movie');       // prima della ricerca mostro i film trending
     contenutiTrending('tv');          // prima della ricerca mostro le serie trending
@@ -27,34 +14,6 @@ $(document).ready(function(){
         cleanResults();
         contenutiTrending('movie');             // mostro i film trending
         contenutiTrending('tv');                // mostro le serie trending
-    });
-
-    // al click sul logo torni sulle tendenze NON FA QUESTO
-    $(".filtro-tipo").click(function(){
-        $(".filtro-tipo").removeClass('selected');
-        if ($(this).hasClass('movie')){         // al click su btn film
-            $(this).addClass('selected');
-            $('.risultati.movie').show();           // mostra risultati film
-            $('.risultati.tv').hide();              // nasconde risultati serie            
-            $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
-            cercaGeneri('movie');                   // riempie la lista generi nel select filtra per genere con solo i generi dei film
-            $('#select-generi').removeClass('d-none');      
-            $('#select-generi').addClass('d-block');        
-            
-        } else if ($(this).hasClass('tv')){     // al click su btn serie tv
-            $(this).addClass('selected');
-            $('.risultati.movie').hide();           // mostra risultati serie tv
-            $('.risultati.tv').show();              // nasconde risultati film 
-            $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
-            cercaGeneri('tv');                      // riempie la lista generi nel select filtra per genere con solo i generi delle serie tv
-            $('#select-generi').removeClass('d-none');     
-            $('#select-generi').addClass('d-block');       
-        } else {
-            $('.risultati.movie').show();
-            $('.risultati.tv').show();
-            $('#select-generi').removeClass('d-block');     
-            $('#select-generi').addClass('d-none');  
-        }
     });
 
     // cerco all'invio o al click sulla icona di ricerca
@@ -83,6 +42,50 @@ $(document).ready(function(){
         }
     })
 
+    // permetto di filtrare i risultati (film, serie, tutti)
+
+    $(".filtro-tipo").click(function(){
+        if ($(this).hasClass('movie')){
+            $('.risultati.movie').show();
+            $('.risultati.tv').hide();
+        } else if ($(this).hasClass('tv')){
+            $('.risultati.movie').hide();
+            $('.risultati.tv').show();
+        } else {
+            $('.risultati.movie').show();
+            $('.risultati.tv').show();
+        }
+    });
+
+    // mostro i filtri per genere
+
+    $(".filtro-tipo").click(function(){
+        $(".filtro-tipo").removeClass('selected');
+        if ($(this).hasClass('movie')){         // al click su btn film
+            $(this).addClass('selected');
+            $('.risultati.movie').show();           // mostra risultati film
+            $('.risultati.tv').hide();              // nasconde risultati serie            
+            $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
+            cercaGeneri('movie');                   // riempie la lista generi nel select filtra per genere con solo i generi dei film
+            $('#select-generi').removeClass('d-none');      
+            $('#select-generi').addClass('d-block');        
+            
+        } else if ($(this).hasClass('tv')){     // al click su btn serie tv
+            $(this).addClass('selected');
+            $('.risultati.movie').hide();           // mostra risultati serie tv
+            $('.risultati.tv').show();              // nasconde risultati film 
+            $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
+            cercaGeneri('tv');                      // riempie la lista generi nel select filtra per genere con solo i generi delle serie tv
+            $('#select-generi').removeClass('d-none');     
+            $('#select-generi').addClass('d-block');       
+        } else {
+            $('.risultati.movie').show();
+            $('.risultati.tv').show();
+            $('#select-generi').removeClass('d-block');     
+            $('#select-generi').addClass('d-none');  
+        }
+    });
+
     // scorrere le liste con le freccette
 
     $('i.right').click(function(){
@@ -99,6 +102,17 @@ $(document).ready(function(){
         elemDaScrollare.scrollLeft(currentPosition);
     });
 
+    // memorizzo il valore del genere e richiamo la fz
+
+
+    $("#generi").change(function() {
+        var genere = $(this).val();
+        console.log(genere);
+        var tipo = $(this).attr("tipo");
+        console.log(tipo);              // UNDEFINED
+        filtraGeneri(tipo,genere);
+    });
+
 })
 
 // ----- funzioni ----- //
@@ -113,7 +127,6 @@ function cercaGeneri(type){         // fz per ottenere tutti i generi
                 language:'it-IT'
             },
             success: function(risposta){
-                // console.log('cercaGeneri funziona');
                 stampaGeneri(risposta,type);
             },
             error: function(){
@@ -123,17 +136,42 @@ function cercaGeneri(type){         // fz per ottenere tutti i generi
     )
 }
 
-function stampaGeneri(data,type){
+function stampaGeneri(data,type){         // fz per stampare i generi nella select
     var source = $("#option-template").html();
     var template = Handlebars.compile(source);
     for (var i = 0; i < data.genres.length; i++){          // ciclo tutti i risultati dell'array results
-        var context = {                                 // specifico context per riuscire a gestire meglio i risultati e inserire le variabili
-            genere: data.genres[i].name                   // corretto per film o serie
+        var context = {                                     // specifico context per riuscire a gestire meglio i risultati e inserire le variabili
+            genere: data.genres[i].name,                     // corretto per film o serie
+            id: data.genres[i].id,                     // corretto per film o serie
+            tipo: type
         };
         var html = template(context);
         $('select#generi').append(html);      // appendo i risultati dell'elemento corretto del DOM
     }
 }
+
+// /discover/movie?with_genres=18
+
+function filtraGeneri(type,id){
+    $.ajax(
+        {
+            url: 'https://api.themoviedb.org/3/discover/'+ type +'?with_genres=' + id,   // uso la stessa fz per due chiamate
+            method:'GET',
+            data:{                                          // aggiungo le chiavi
+                api_key:'6cdc8707c60410cd9aef476067301b80',
+                language:'it-IT'
+            },
+            success: function(risposta){
+                console.log(risposta);
+                // stampa(risposta,type);                  // stampo i risultati
+            },
+            error: function(){
+                alert('Si è verificato un errore qui');
+            }
+        }
+    )
+}
+
 
 function contenutiTrending(type){          // fz per mostrare i contenuti trending
     $.ajax(
