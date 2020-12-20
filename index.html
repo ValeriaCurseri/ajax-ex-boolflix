@@ -28,10 +28,11 @@
                 <div class="filtro-tipo"><span>Tutti</span></div>
                 <div class="filtro-tipo movie"><span>Film</span></div>
                 <div class="filtro-tipo tv"><span>Serie TV</span></div>
-                <div id="select-generi" class="d-none">
-                    <span>Filtra per genere:</span>
-                    <select id="generi" name="generi">
-                    </select>
+                <div id="select-generi" style="display:none">
+                <!-- <div id="select-generi" class="d-none"> -->
+                    <span class="d-block">Filtra per genere:</span>
+                    <ul id="generi" name="generi">
+                    </ul>
                 </div>
             </div>
             
@@ -50,6 +51,7 @@
             <div class="row">
                 <i class="fas fa-chevron-left left movie"></i>
                 <div class="lista movie">
+                <!-- PER SLIDER RESPONSIVE, MA SISTEMARE LARGHEZZA OVERLAY <div class="lista movie row"> -->
 
                 </div>
                 <i class="fas fa-chevron-right right movie"></i>
@@ -62,6 +64,7 @@
             <div class="row">
                 <i class="fas fa-chevron-left left tv"></i>
                 <div class="lista tv">
+                <!-- PER SLIDER RESPONSIVE, MA SISTEMARE LARGHEZZA OVERLAY <div class="lista tv row"> -->
 
                 </div>
                 <i class="fas fa-chevron-right right tv"></i>
@@ -78,6 +81,7 @@
         <!-- template handlebars per i risultati della ricerca -->
         <script id="entry-template" type="text/x-handlebars-template">
             <div class='risultato' id="{{id}}">
+            <!-- PER SLIDER RESPONSIVE, MA SISTEMARE LARGHEZZA OVERLAY <div class='risultato col-12 col-sm-6 col-md-4 col-lg-3' id="{{id}}"> -->
                 <div class="overlay">
                     <h3 class="titolo">{{titolo}}</h3>
                     <span class="titolo originale"><em>Titolo originale:</em> {{titoloOriginale}}</span>
@@ -102,9 +106,9 @@
 
         <!-- template handlebars della select dei generi -->
         <script id="option-template" type="text/x-handlebars-template">
-            <option value="{{id}}" tipo="{{tipo}}">
+            <li class="col-md-6" value="{{id}}" tipo="{{tipo}}">
                 {{genere}}
-            </option>
+            </li>
         </script>
 
         <!-- javascript -->

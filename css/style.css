@@ -36,20 +36,6 @@ header{
     background-color: #000;
 }
 
-select#generi{
-    width: 230px;
-    height: 40px;
-    border: 2px solid #fff;
-    border-radius: 5px;
-    cursor: pointer;
-    position: relative;
-    text-transform: uppercase;
-    background-color: #000;
-    color: #fff;
-    padding-left: 10px;
-    font-size: 16px;
-}
-
 #filtri{
     display:flex;
     flex-direction: row;
@@ -77,6 +63,31 @@ select#generi{
     transform: translate(-50%,-50%);
     width: 100%;
     text-align: center;
+}
+
+#select-generi{
+    position: relative;
+}
+
+ul#generi{
+    width: 420px;
+    height: 40px;
+    cursor: pointer;
+    position: absolute;
+    top: 40px;
+    text-transform: uppercase;
+    color: #fff;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+ul#generi li {
+    list-style: none;
+    background-color: #000;
+}
+
+ul#generi li:hover {
+    color:red;
 }
 
 #spazio-ricerca{
@@ -162,7 +173,7 @@ section#mostra-query{
 }
 
 ::-webkit-scrollbar-thumb {/* Handle */
-  background: #888;
+  background: rgb(231, 149, 149);
 }
 
 ::-webkit-scrollbar-thumb:hover {/* Handle on hover */
@@ -191,7 +202,7 @@ section#mostra-query{
 
 .row {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -203,6 +214,7 @@ section#mostra-query{
     overflow-y: hidden;
     margin-top:50px;
     overflow-x: hidden; /* disattiva la scrollbar perchè ora hai le frecce */
+    scroll-behavior: smooth;
 }
 
 .risultato{

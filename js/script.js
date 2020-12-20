@@ -1,12 +1,5 @@
 $(document).ready(function(){
 
-    // DA FARE
-    // - far funzionare il filtro per genere
-    // - al click su film o serie tv appare il filtro dei generi OK MA CON TRANSITION / SMOOTH
-    // - se clicco sulla risposte suggerite mantengo le regole di stile date all'input
-    // - personalizzare barra scorrimento in select generi
-    
-
     contenutiTrending('movie');       // prima della ricerca mostro i film trending
     contenutiTrending('tv');          // prima della ricerca mostro le serie trending
     
@@ -67,8 +60,7 @@ $(document).ready(function(){
             $('.risultati.tv').hide();              // nasconde risultati serie            
             $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
             cercaGeneri('movie');                   // riempie la lista generi nel select filtra per genere con solo i generi dei film
-            $('#select-generi').removeClass('d-none');      
-            $('#select-generi').addClass('d-block');        
+            $('#select-generi').fadeIn();      
             
         } else if ($(this).hasClass('tv')){     // al click su btn serie tv
             $(this).addClass('selected');
@@ -76,13 +68,11 @@ $(document).ready(function(){
             $('.risultati.tv').show();              // nasconde risultati film 
             $('#generi').empty();                   // svuota la lista generi nel select filtra per genere
             cercaGeneri('tv');                      // riempie la lista generi nel select filtra per genere con solo i generi delle serie tv
-            $('#select-generi').removeClass('d-none');     
-            $('#select-generi').addClass('d-block');       
+            $('#select-generi').fadeIn();      
         } else {
             $('.risultati.movie').show();
             $('.risultati.tv').show();
-            $('#select-generi').removeClass('d-block');     
-            $('#select-generi').addClass('d-none');  
+            $('#select-generi').fadeOut(); 
         }
     });
 
@@ -91,26 +81,25 @@ $(document).ready(function(){
     $('i.right').click(function(){
         var elemDaScrollare = $(this).siblings('.lista');
         var currentPosition = elemDaScrollare.scrollLeft();
-        currentPosition += 350;
+        currentPosition += 347;
         elemDaScrollare.scrollLeft(currentPosition);
     });
 
     $('i.left').click(function(){
         var elemDaScrollare = $(this).siblings('.lista');
         var currentPosition = elemDaScrollare.scrollLeft();
-        currentPosition -= 350;
+        currentPosition -= 347;
         elemDaScrollare.scrollLeft(currentPosition);
     });
 
     // memorizzo il valore del genere e richiamo la fz
 
-
-    $("#generi").change(function() {
+    $(document).on("click", "ul#generi>li", function() {
         var genere = $(this).val();
-        console.log(genere);
         var tipo = $(this).attr("tipo");
-        console.log(tipo);              // UNDEFINED
         filtraGeneri(tipo,genere);
+        console.log(genere, tipo);
+        $('#select-generi').fadeOut(); 
     });
 
 })
@@ -146,11 +135,9 @@ function stampaGeneri(data,type){         // fz per stampare i generi nella sele
             tipo: type
         };
         var html = template(context);
-        $('select#generi').append(html);      // appendo i risultati dell'elemento corretto del DOM
+        $('ul#generi').append(html);      // appendo i risultati dell'elemento corretto del DOM
     }
 }
-
-// /discover/movie?with_genres=18
 
 function filtraGeneri(type,id){
     $.ajax(
@@ -162,8 +149,10 @@ function filtraGeneri(type,id){
                 language:'it-IT'
             },
             success: function(risposta){
-                console.log(risposta);
-                // stampa(risposta,type);                  // stampo i risultati
+                console.log(this.url);
+                console.log(type);
+                $('.lista.' + type).empty();            // pulisco i risultati e l'input per fare una nuova ricerca
+                stampa(risposta,type);                  // stampo i risultati
             },
             error: function(){
                 alert('Si è verificato un errore qui');
@@ -171,7 +160,6 @@ function filtraGeneri(type,id){
         }
     )
 }
-
 
 function contenutiTrending(type){          // fz per mostrare i contenuti trending
     $.ajax(
@@ -287,11 +275,10 @@ function castGeneri(type,id){
             success: function(risposta){
                 var generi = risposta.genres;                           // array dei generi
                 var cast = risposta.credits.cast;                       // array del cast
-
                 stampaDettagli(generi,cast,id);                         // fz per stampare i due risultati con Handlebars
             },
             error: function(){
-                alert('Si è verificato un errore');
+                // console.log('Si è verificato un errore nella fz castGeneri');
             }
         }
     )
@@ -387,7 +374,7 @@ function immagine(immagine){
 }
 
 function sinossi(testo){
-    if (testo==""){                                     //if (testo.isEmpty()){             NON FUNZIONA
+    if (testo==""){
         var mostra = 'Nessuna sinossi disponibile';
     } else {
         var mostra = testo.substring(0,300) + '...';
